@@ -14,12 +14,11 @@ def index():
 @usuario_bp.route("/create", methods=['GET','POST'])
 def create():
     if request.method == 'POST':
-        nombre = request.form['nombre']
         username = request.form['username']
         password = request.form['password']
         rol = request.form['rol']
         
-        usuario = Usuario(nombre,username,password,rol)
+        usuario = Usuario(username,password,rol)
         usuario.save()
         return redirect(url_for('usuario.index'))
     
@@ -29,12 +28,11 @@ def create():
 def edit(id):
     usuario = Usuario.get_by_id(id)
     if request.method == 'POST':
-        nombre = request.form['nombre']
         username = request.form['username']
         password = request.form['password']
         rol = request.form['rol']
         #actualizar
-        usuario.update(nombre=nombre, username=username, password=password,rol=rol)
+        usuario.update(username=username, password=password,rol=rol)
         return redirect(url_for('usuario.index'))
     
     return usuario_view.edit(usuario)

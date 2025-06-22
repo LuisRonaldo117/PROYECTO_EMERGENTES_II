@@ -5,39 +5,35 @@ class Usuario(db.Model):
     __tablename__ = "usuarios"
 
     id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(80), nullable=False)
-    username = db.Column(db.String(20), nullable=False, unique=True)  # Agregado unique
-    password = db.Column(db.String(20), nullable=False)  # Longitud aumentada para el hash
+    username = db.Column(db.String(20), nullable=False, unique=True)
+    password = db.Column(db.String(128), nullable=False)  # Longitud suficiente para hash
     rol = db.Column(db.String(20), nullable=False)
 
-    def __init__(self, nombre, username, password, rol):
-        self.nombre = nombre
+    def __init__(self, username, password, rol):
         self.username = username
-        self.password = self.hash_password(password)  # Hasheamos la contraseña
+        self.password = self.hash_password(password)
         self.rol = rol
-    
-    @staticmethod 
+
+    @staticmethod
     def hash_password(password):
         return generate_password_hash(password)
-    
-    def verify_password(self,password):
-        return generate_password_hash(self.password, password)  # Para verificar contraseñas
+
+    def verify_password(self, password):
+        return check_password_hash(self.password, password)
 
     def save(self):
         db.session.add(self)
         db.session.commit()
-        
+
     @staticmethod
     def get_all():
         return Usuario.query.all()
-    
+
     @staticmethod
     def get_by_id(id):
         return Usuario.query.get(id)
-    
-    def update(self,nombre=None,username=None,password=None,rol=None):
-        if nombre:
-            self.nombre = nombre
+
+    def update(self, username=None, password=None, rol=None):
         if username:
             self.username = username
         if password:
@@ -45,9 +41,7 @@ class Usuario(db.Model):
         if rol:
             self.rol = rol
         db.session.commit()
-        
+
     def delete(self):
         db.session.delete(self)
         db.session.commit()
-    
-    
