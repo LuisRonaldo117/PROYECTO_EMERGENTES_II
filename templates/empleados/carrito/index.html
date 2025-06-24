@@ -1,0 +1,101 @@
+{% extends 'empleados/base.html' %}
+
+{% block title %}Carrito de Compras{% endblock %}
+
+{% block content %}
+<h2>Carrito de Compras</h2>
+
+<!-- Formulario principal -->
+<form method="POST" action="{{ url_for('carrito_empleado.confirmar_compra') }}">
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="cliente_id" class="form-label"><strong>Buscar Cliente</strong></label>
+      <select name="cliente_id" id="cliente_id" class="form-select select2" required>
+        <option value="">Seleccione un cliente</option>
+        {% for cliente in clientes %}
+          <option value="{{ cliente.id }}">{{ cliente.nombre }} - {{ cliente.telefono }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <label for="metodo_pago" class="form-label"><strong>Método de Pago</strong></label>
+      <select name="metodo_pago" id="metodo_pago" class="form-select" required>
+        <option value="">Seleccione</option>
+        <option value="Efectivo">Efectivo</option>
+        <option value="Tarjeta">Tarjeta</option>
+        <option value="Pago QR">QR</option>
+      </select>
+    </div>
+
+    <div class="col-md-6">
+      <label for="modelo_vehiculo_id" class="form-label"><strong>Modelo de Vehículo</strong></label>
+      <select name="modelo_vehiculo_id" id="modelo_vehiculo_id" class="form-select">
+        <option value="">Sin vehículo</option>
+        {% for modelo in modelos_vehiculos %}
+          <option value="{{ modelo.id }}">
+            {{ modelo.marca }} {{ modelo.modelo }} ({{ modelo.anio }})
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  {% if carrito %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Precio Unitario</th>
+        <th>Cantidad</th>
+        <th>Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for producto_id, item in carrito.items() %}
+      <tr>
+        <td>{{ item.nombre }}</td>
+        <td>{{ item.precio }}</td>
+        <td>
+          <form method="POST" action="{{ url_for('carrito_empleado.disminuir', producto_id=producto_id) }}" style="display:inline;">
+              <button class="btn btn-sm btn-outline-secondary">-</button>
+          </form>
+          <span style="padding: 0 10px;">{{ item.cantidad }}</span>
+          <form method="POST" action="{{ url_for('carrito_empleado.incrementar', producto_id=producto_id) }}" style="display:inline;">
+              <button class="btn btn-sm btn-outline-secondary">+</button>
+          </form>
+        </td>
+        <td>{{ item.precio * item.cantidad }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p><strong>Total: </strong> {{ total }}</p>
+  {% else %}
+  <p>El carrito está vacío.</p>
+  {% endif %}
+
+  <div class="mt-3">
+    <a href="{{ url_for('empleado.productos') }}" class="btn btn-primary">Seguir comprando</a>
+    <button type="submit" class="btn btn-success">Confirmar Compra</button>
+    <a href="{{ url_for('carrito_empleado.vaciar_carrito') }}" class="btn btn-danger">Vaciar Carrito</a>
+  </div>
+</form>
+
+<!-- Scripts Select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $('#cliente_id').select2({
+      placeholder: "Buscar cliente por nombre o teléfono",
+      allowClear: true,
+      width: '100%'
+    });
+  });
+</script>
+{% endblock %}

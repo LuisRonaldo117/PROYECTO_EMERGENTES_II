@@ -1,42 +1,56 @@
 from database import db
+from datetime import datetime
 
 class Producto(db.Model):
     __tablename__ = "productos"
 
     id = db.Column(db.Integer, primary_key=True)
-    descripcion = db.Column(db.String(120), nullable=False)
-    precio = db.Column(db.Float(11,2), nullable=False)
+    nombre = db.Column(db.String(100), nullable=False)
+    descripcion = db.Column(db.String(255))
+    precio = db.Column(db.Float, nullable=False)
     stock = db.Column(db.Integer, nullable=False)
-    
-    # relacion con ventas
-    ventas = db.relationship('Venta',back_populates='producto')
+    imagen = db.Column(db.String(255), nullable=True)
+    categoria_id = db.Column(db.Integer, db.ForeignKey("categorias.id"))
 
-    def __init__(self, descripcion, precio, stock):
-        self.descripcion = descripcion
-        self.precio = precio
-        self.stock = stock
-    
+    # Relaciones
+    categoria = db.relationship("Categoria", back_populates="productos")
+    proveedores = db.relationship("ProductoProveedor", back_populates="producto")
+    detalles_venta = db.relationship("DetalleVenta", back_populates="producto")
+
+
+    # Métodos CRUD
     def save(self):
         db.session.add(self)
         db.session.commit()
-        
-    @staticmethod
-    def get_all():
-        return Producto.query.all()
-    
-    @staticmethod
-    def get_by_id(id):
-        return Producto.query.get(id)
-    
-    def update(self,descripcion=None,precio=None,stock=None):
-        if descripcion and precio and stock:
-            self.descripcion = descripcion
-            self.precio = precio
-            self.stock = stock
+
+    def update(self, **kwargs):
+        for k, v in kwargs.items():
+            setattr(self, k, v)
         db.session.commit()
-        
+
     def delete(self):
         db.session.delete(self)
         db.session.commit()
-    
-    
+
+    @classmethod
+    def get_all(cls):
+        return cls.query.all()
+
+    @classmethod
+    def get_by_id(cls, id):
+        return cls.query.get(int(id))
+
+
+class ProductoProveedor(db.Model):
+    __tablename__ = "producto_proveedor"
+
+    id = db.Column(db.Integer, primary_key=True)
+    producto_id = db.Column(db.Integer, db.ForeignKey("productos.id"))
+    proveedor_id = db.Column(db.Integer, db.ForeignKey("proveedores.id"))
+    cantidad = db.Column(db.Integer, nullable=False)
+    precio_compra = db.Column(db.Float, nullable=False)
+    fecha = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    total = db.Column(db.Float, nullable=False)
+
+    producto = db.relationship("Producto", back_populates="proveedores")
+    proveedor = db.relationship("Proveedor", back_populates="productos")  # Asegúrate de tener esto también en el modelo `Proveedor`

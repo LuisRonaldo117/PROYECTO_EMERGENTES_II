@@ -1,35 +1,177 @@
 {% extends 'base.html' %}
+{% block title %}Productos{% endblock %}
 
-{% block title %} PRODUCTOS {% endblock %}
+{% block styles %}
+<style>
+  body {
+    background-color: #ffffff; /* fondo blanco puro */
+    color: #222;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  h1 {
+    margin-bottom: 30px;
+    color: #1a237e; /* azul oscuro */
+    font-weight: 700;
+    text-align: center;
+  }
+  .container {
+    max-width: 1500px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(26, 35, 126, 0.25);
+  }
+  a.button {
+    display: inline-block;
+    background-color: #3949ab; /* azul medio */
+    color: white;
+    padding: 10px 18px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  a.button:hover {
+    background-color: #283593; /* azul más oscuro */
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  thead {
+    background-color: #1a237e; /* azul oscuro para encabezados */
+    color: white;
+  }
+  thead th {
+    padding: 12px 15px;
+    font-weight: 700;
+    text-align: center;
+    border: 1px solid #283593;
+  }
+  tbody tr {
+    background-color: #f3f6fc; /* azul muy claro */
+    border-bottom: 1px solid #c5cae9;
+    transition: background-color 0.3s ease;
+  }
+  tbody tr:nth-child(odd) {
+    background-color: #e8ebf9; /* azul claro alternado */
+  }
+  tbody tr:hover {
+    background-color: #d1d9ff;
+    color: #1a237e;
+  }
+  tbody td {
+    padding: 12px 15px;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #c5cae9;
+    color: #1a237e;
+    font-size: 0.8rem;       /* Más grande */
+  font-weight: 700; 
+  }
+tbody td.description {
+  text-align: left;
+  max-width: 300px;       /* ancho máximo para que no estire mucho la tabla */
+  white-space: normal;    /* permite que el texto haga salto de línea */
+  overflow-wrap: break-word; /* rompe palabras largas para evitar overflow */
+  word-wrap: break-word;     /* soporte adicional para romper palabras */
+  hyphens: auto;             /* permite guiones si la palabra se corta */
+  /* quita overflow:hidden y text-overflow:ellipsis para mostrar todo el texto */
+}
+
+  img.product-image {
+  width: 75px;
+  height: 75px;
+
+  border-radius: 6px;
+  image-rendering: crisp-edges;
+
+}
+
+  
+  .actions {
+  display: flex;
+  flex-direction: column; /* Apila verticalmente */
+  align-items: center;     /* Centra horizontalmente */
+  gap: 8px;                /* Espacio entre los botones */
+}
+
+  .actions a {
+  padding: 6px 0;
+  width: 70px; /* MISMO ancho para ambos */
+  text-align: center;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  text-decoration: none;
+  font-weight: 600;
+  color: white;
+  display: inline-block;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* sombra uniforme */
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+  .actions a.edit {
+    background-color: #3949ab;
+  }
+  .actions a.edit:hover {
+    background-color: #283593;
+  }
+  .actions a.delete {
+    background-color: #e53935;
+  }
+  .actions a.delete:hover {
+    background-color: #ab2a26;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
+<div class="container">
+  <h1>Lista de Productos</h1>
+  <a href="{{ url_for('producto.create') }}" class="button">+ Nuevo Producto</a>
 
-<h1>Lista de Productos</h1>
-
-<a href="{{url_for('producto.create')}}" class="btn btn-success mb-3">Nuevo</a>
-
-<table class="table table-striped">
-    <tr>
-        <th>ID</th>
-        <th>Descripcion</th>
-        <th>Precio</th>
+  <table>
+    <thead>
+      <tr>
+        <th>Imagen</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Precio (Bs.)</th>
         <th>Stock</th>
-        <th></th>
-        <th></th>
-    </tr>
-    {% for item in productos %}
-    <tr>
-        <td>{{item.id}}</td>
-        <td>{{item.descripcion}}</td>
-        <td>{{item.precio | round(2)}}</td>
-        <td>{{item.stock}}</td>
+        <th>Categoría</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in productos %}
+      <tr>
         <td>
-            <a href="{{url_for('producto.edit',id=item.id)}}" class="btn btn-warning">Editar</a>
+          {% if p.imagen %}
+            <img src="{{ url_for('static', filename='img/productos/' ~ p.imagen) }}" alt="{{ p.nombre }}" class="product-image" />
+          {% else %}
+            No hay imagen
+          {% endif %}
         </td>
-        <td>
-            <a href="{{url_for('producto.delete',id=item.id)}}" class="btn btn-danger">Eliminar</a>
+        <td>{{ p.nombre }}</td>
+        <td class="description" title="{{ p.descripcion }}">{{ p.descripcion|truncate(60, True, '...') }}</td>
+        <td>{{ "%.2f"|format(p.precio) }}</td>
+        <td>{{ p.stock }}</td>
+        <td>{{ p.categoria.nombre if p.categoria else 'Sin categoría' }}</td>
+        <td class="actions">
+          <a href="{{ url_for('producto.edit', id=p.id) }}" class="edit">Editar</a>
+          <a href="{{ url_for('producto.delete', id=p.id) }}" class="delete" onclick="return confirm('¿Estás seguro de eliminar este producto?');">Eliminar</a>
         </td>
-    </tr>
-    {% endfor %}
-</table>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" style="color:#1a237e; font-style: italic;">No hay productos registrados.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}

@@ -1,0 +1,177 @@
+/* admin.css */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #121212;
+  color: #eee;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.main-sidebar {
+  width: 260px;
+  background-color: #1e1e2f;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  overflow-y: auto;
+  border-right: 1px solid #2e2e3e;
+}
+
+.brand-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #2e2e3e;
+  color: #a2a2ff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.25rem;
+  user-select: none;
+}
+
+.brand-image {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+}
+
+.user-panel {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.25rem 0 1.75rem;
+}
+
+.user-icon {
+  font-size: 2.3rem;
+  color: #6c63ff;
+}
+
+.user-info p {
+  margin: 0;
+  line-height: 1.2;
+}
+
+.username {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #c5c6f9;
+}
+
+.sidebar-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-menu ul li {
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-menu a.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  text-decoration: none;
+  color: #ccc;
+  padding: 0.5rem 0.8rem;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  user-select: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar-menu a.nav-link i {
+  min-width: 20px;
+  text-align: center;
+  font-size: 1.1rem;
+  color: #8a8aff;
+}
+
+.sidebar-menu a.nav-link:hover,
+.sidebar-menu a.nav-link.active {
+  background-color: #6c63ff;
+  color: #fff;
+}
+
+.has-submenu > a {
+  justify-content: space-between;
+}
+
+.submenu {
+  margin-left: 1.7rem;
+  margin-top: 0.3rem;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.has-submenu.open .submenu {
+  max-height: 500px; /* suficiente para mostrar el submenu */
+}
+
+.submenu li {
+  margin-bottom: 0.35rem;
+}
+
+.submenu a.nav-link {
+  font-size: 0.85rem;
+  color: #bbb;
+  padding-left: 0;
+}
+
+.submenu a.nav-link:hover {
+  color: #fff;
+}
+
+.submenu a.nav-link i {
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+.content-wrapper {
+  flex-grow: 1;
+  padding: 1.4rem 2rem;
+  overflow-y: auto;
+  background: linear-gradient(135deg, #2f2f44, #1f1f30);
+  color: #eee;
+  font-size: 1rem;
+  min-width: 0;
+}
+
+/* Responsivo para pantallas pequeñas */
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+    height: auto;
+  }
+  .main-sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 0.5rem 1rem;
+    border-right: none;
+    border-bottom: 1px solid #2e2e3e;
+  }
+  .brand-link {
+    display: none;
+  }
+  .sidebar-menu ul {
+    display: flex;
+    gap: 1rem;
+  }
+  .sidebar-menu ul li {
+    margin-bottom: 0;
+  }
+  .content-wrapper {
+    padding: 1rem;
+  }
+}

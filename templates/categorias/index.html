@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% block title %}Categorías{% endblock %}
+
+{% block styles %}
+<style>
+  body {
+    background-color: #ffffff;
+    color: #222;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  h1 {
+    margin-bottom: 30px;
+    color: #1a237e;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(26, 35, 126, 0.25);
+  }
+
+  a.button {
+    display: inline-block;
+    background-color: #3949ab;
+    color: white;
+    padding: 10px 18px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+
+  a.button:hover {
+    background-color: #283593;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  thead {
+    background-color: #1a237e;
+    color: white;
+  }
+
+  thead th {
+    padding: 12px 15px;
+    font-weight: 700;
+    text-align: center;
+    border: 1px solid #283593;
+  }
+
+  tbody tr {
+    background-color: #f3f6fc;
+    border-bottom: 1px solid #c5cae9;
+    transition: background-color 0.3s ease;
+  }
+
+  tbody tr:nth-child(odd) {
+    background-color: #e8ebf9;
+  }
+
+  tbody tr:hover {
+    background-color: #d1d9ff;
+    color: #1a237e;
+  }
+
+  tbody td {
+    padding: 12px 15px;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #c5cae9;
+    color: #1a237e;
+  }
+
+  .actions {
+  display: flex;
+  flex-direction: row; /* o simplemente eliminarlo porque 'row' es por defecto */
+  justify-content: center;
+  gap: 10px; /* espacio entre botones */
+}
+
+
+  .actions a {
+    padding: 6px 0;
+    width: 70px;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    text-decoration: none;
+    font-weight: 600;
+    color: white;
+    display: inline-block;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.3s ease;
+    user-select: none;
+  }
+
+  .actions a.edit {
+    background-color: #3949ab;
+  }
+
+  .actions a.edit:hover {
+    background-color: #283593;
+  }
+
+  .actions a.delete {
+    background-color: #e53935;
+  }
+
+  .actions a.delete:hover {
+    background-color: #ab2a26;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h1>Lista de Categorías</h1>
+  <a href="{{ url_for('categoria.create') }}" class="button">+ Nueva Categoría</a>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in categorias %}
+      <tr>
+        <td>{{ item.id }}</td>
+        <td>{{ item.nombre }}</td>
+        <td class="actions">
+          <a href="{{ url_for('categoria.edit', id=item.id) }}" class="edit">Editar</a>
+          <a href="{{ url_for('categoria.delete', id=item.id) }}" class="delete" onclick="return confirm('¿Estás seguro de eliminar esta categoría?');">Eliminar</a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="3" style="color:#1a237e; font-style: italic;">No hay categorías registradas.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

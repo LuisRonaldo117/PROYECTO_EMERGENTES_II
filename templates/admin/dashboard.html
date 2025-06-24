@@ -1,12 +1,109 @@
-<!-- templates/admin/dashboard.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Panel Administrador</title>
+    <meta charset="UTF-8" />
+    <title>Panel de Administración - Ferretería La Llave</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- FontAwesome para íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}" />
 </head>
 <body>
-    <h1>Bienvenido Administrador</h1>
-    <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+    <aside class="main-sidebar">
+        <a href="#" class="brand-link">
+            <img src="{{ url_for('static', filename='img/AdminLTELogo.png') }}" alt="Logo" class="brand-image" />
+            <span class="brand-text">Ferretería La Llave</span>
+        </a>
+
+        <div class="user-panel">
+            <i class="fas fa-user-circle user-icon"></i>
+            <div class="user-info">
+                <p>Bienvenido al Sistema</p>
+                <p class="username">{{ current_user.username if current_user.is_authenticated else 'Invitado' }}</p>
+            </div>
+        </div>
+
+        <nav class="sidebar-menu">
+            <ul>
+                <li><a href="#" class="nav-link active" onclick="loadContent('dashboard')">
+<i class="fas fa-th"></i> Tablero principal</a></li>
+
+                <li class="has-submenu">
+                    <a href="#"><i class="fas fa-user"></i> Administrador <i class="fas fa-angle-left submenu-icon"></i></a>
+                    <ul class="submenu">
+                        <li><a href="#" class="nav-link" onclick="loadContent('empleados')"><i class="far fa-circle"></i> Empleados</a></li>
+                        <li><a href="#" class="nav-link" onclick="loadContent('proveedores')"><i class="far fa-circle"></i> Proveedores</a></li>
+                        <li><a href="#" class="nav-link" onclick="loadContent('sucursales')"><i class="far fa-circle"></i> Sucursales</a></li>
+                    </ul>
+                </li>
+
+                <li class="has-submenu">
+                    <a href="#"><i class="fas fa-box"></i> Inventario <i class="fas fa-angle-left submenu-icon"></i></a>
+                    <ul class="submenu">
+                        <li><a href="#" class="nav-link" onclick="loadContent('productos')"><i class="far fa-circle"></i> Productos</a></li>
+                        <li><a href="#" class="nav-link" onclick="loadContent('categorias')"><i class="far fa-circle"></i> Categorías</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="{{url_for('usuario.index')}}" class="load-link" onclick="loadContent('ventas')"><i class="fas fa-cash-register"></i> Ventas</a></li>
+                <li><a href="#" class="nav-link" onclick="loadContent('pedidos')"><i class="fas fa-shipping-fast"></i> Pedido de Cliente</a></li>
+                <li><a href="#" class="nav-link" onclick="loadContent('compras')"><i class="fas fa-truck-loading"></i> Compras</a></li>
+
+                <li class="has-submenu">
+                    <a href="#"><i class="fas fa-receipt"></i> Reportes <i class="fas fa-angle-left submenu-icon"></i></a>
+                    <ul class="submenu">
+                        <li><a href="#" class="nav-link" onclick="loadContent('reporte_productos')"><i class="far fa-circle"></i> Productos</a></li>
+                        <li><a href="#" class="nav-link" onclick="loadContent('reporte_empleados')"><i class="far fa-circle"></i> Empleados</a></li>
+                        <li><a href="#" class="nav-link" onclick="loadContent('reporte_proveedores')"><i class="far fa-circle"></i> Compras Realizadas</a></li>
+                        <li><a href="#" class="nav-link" onclick="loadContent('reporte_facturas')"><i class="far fa-circle"></i> Facturas</a></li>
+                        <li><a href="#" class="nav-link" onclick="loadContent('reporte_clientes')"><i class="far fa-circle"></i> Clientes</a></li>
+                        <li><a href="#" class="nav-link" onclick="loadContent('reporte_asistencia')"><i class="far fa-circle"></i> Asistencia</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    
+ <a href="{{url_for('usuario.index')}}" class="load-link">Ventas</a>
+<li>
+  <a href="{{ url_for('usuario.index') }}" class="load-link">
+    <i class="fas fa-cash-register"></i> Ventas
+  </a>
+</li>
+
+</li></ul>
+        </nav>
+    </aside>
+
+    <main class="content-wrapper" id="content-wrapper">
+        <!-- Aquí se cargará el contenido dinámico -->
+        <h2>Bienvenido, administrador</h2>
+        <p>Seleccione una opción en el menú para comenzar.</p>
+    </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const content = document.getElementById('content-wrapper');
+
+  document.querySelectorAll('a.load-link').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault(); // Evita que recargue la página
+
+      fetch(link.href)
+        .then(res => {
+          if (!res.ok) throw new Error('Error al cargar contenido');
+          return res.text();
+        })
+        .then(html => {
+          content.innerHTML = html;
+        })
+        .catch(err => {
+          content.innerHTML = `<p style="color:red;">${err.message}</p>`;
+        });
+    });
+  });
+});
+</script>
+
+
 </body>
 </html>

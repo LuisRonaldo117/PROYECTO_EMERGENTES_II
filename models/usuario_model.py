@@ -1,13 +1,16 @@
 from database import db
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
-class Usuario(db.Model):
+class Usuario(db.Model, UserMixin):
     __tablename__ = "usuarios"
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(128), nullable=False)  # Longitud suficiente para hash
     rol = db.Column(db.String(20), nullable=False)
+    
+    empleado = db.relationship("Empleado", back_populates="usuario", uselist=False)
 
     def __init__(self, username, password, rol):
         self.username = username

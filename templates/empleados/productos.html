@@ -1,0 +1,45 @@
+{% extends 'empleados/base.html' %}
+
+{% block title %}Productos - Empleado{% endblock %}
+
+{% block content %}
+  <h3 class="mb-4">Buscar por categorías</h3>
+  <form method="GET" class="mb-4 d-flex align-items-center gap-3">
+    <select name="categoria_id" class="form-select" style="max-width: 300px;">
+      <option value="" {% if not categoria_seleccionada %}selected{% endif %}>Todas las categorías</option>
+      {% for cat in categorias %}
+        <option value="{{ cat.id }}" {% if categoria_seleccionada == cat.id %}selected{% endif %}>{{ cat.nombre }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit" class="btn btn-primary px-4">Filtrar</button>
+  </form>
+
+  <div class="row row-cols-1 row-cols-md-4 g-4">
+    {% for producto in productos %}
+      <div class="col">
+        <div class="card h-100">
+          {% if producto.imagen %}
+            <img class="product-image" src="{{ url_for('static', filename='img/productos/' ~ producto.imagen) }}" alt="{{ producto.nombre }}" />
+          {% else %}
+            <div style="height: 180px; display: flex; align-items: center; justify-content: center; background: #f0f0f0; color: #999;">
+              Sin imagen
+            </div>
+          {% endif %}
+          <div class="card-body text-center">
+            <h5 class="card-title">{{ producto.nombre }}</h5>
+            <p class="card-text">Bs {{ "%.2f"|format(producto.precio) }}</p>
+<form method="POST" action="{{ url_for('carrito_empleado.agregar') }}">
+  <input type="hidden" name="producto_id" value="{{ producto.id }}">
+  <button type="submit" class="btn btn-primary btn-sm">
+    <i class="bi bi-cart-plus-fill"></i> Añadir
+  </button>
+</form>
+
+
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

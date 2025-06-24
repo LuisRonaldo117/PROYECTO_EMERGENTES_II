@@ -37,5 +37,16 @@
       </form>
     </div>
   </div>
+<script>
+  setTimeout(() => {
+    const alert = document.querySelector('.alert');
+    if (alert) {
+      alert.style.transition = 'opacity 0.5s ease';
+      alert.style.opacity = '0';
+      setTimeout(() => alert.remove(), 500); // lo remueve después de desvanecer
+    }
+  }, 2000); // 2 segundos
+</script>
+
 </body>
 </html>

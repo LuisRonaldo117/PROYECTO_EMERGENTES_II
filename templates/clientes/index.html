@@ -6,30 +6,55 @@
 
 <h1>Lista de Clientes</h1>
 
-<a href="{{url_for('cliente.create')}}" class="btn btn-success mb-3">Nuevo</a>
+<!-- Formulario de búsqueda -->
+<form method="GET" class="mb-3 d-flex gap-2 align-items-center">
+  <input
+    type="text"
+    name="q"
+    placeholder="Buscar cliente por nombre o email"
+    class="form-control"
+    style="max-width: 300px;"
+    value="{{ request.args.get('q', '') }}"
+  />
+  <button type="submit" class="btn btn-primary">Buscar</button>
+</form>
+
+<a href="{{ url_for('cliente.index') }}" class="btn btn-secondary mb-3">Mostrar todos</a>
+
+
+<a href="{{ url_for('cliente.create') }}" class="btn btn-success mb-3">Nuevo</a>
 
 <table class="table table-striped">
+  <thead>
     <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Email</th>
-        <th>Telefono</th>
-        <th></th>
-        <th></th>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Email</th>
+      <th>Teléfono</th>
+      <th></th>
+      <th></th>
     </tr>
+  </thead>
+  <tbody>
     {% for item in clientes %}
     <tr>
-        <td>{{item.id}}</td>
-        <td>{{item.nombre}}</td>
-        <td>{{item.email}}</td>
-        <td>{{item.telefono}}</td>
-        <td>
-            <a href="{{url_for('cliente.edit',id=item.id)}}" class="btn btn-warning">Editar</a>
-        </td>
-        <td>
-            <a href="{{url_for('cliente.delete',id=item.id)}}" class="btn btn-danger">Eliminar</a>
-        </td>
+      <td>{{ item.id }}</td>
+      <td>{{ item.nombre }}</td>
+      <td>{{ item.email }}</td>
+      <td>{{ item.telefono }}</td>
+      <td>
+        <a href="{{ url_for('cliente.edit', id=item.id) }}" class="btn btn-warning">Editar</a>
+      </td>
+      <td>
+        <a href="{{ url_for('cliente.delete', id=item.id) }}" class="btn btn-danger">Eliminar</a>
+      </td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="6" class="text-center">No se encontraron clientes.</td>
     </tr>
     {% endfor %}
+  </tbody>
 </table>
+
 {% endblock %}

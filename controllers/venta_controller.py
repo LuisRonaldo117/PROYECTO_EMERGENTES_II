@@ -1,60 +1,47 @@
-from flask import request,redirect,url_for,Blueprint
-from datetime import datetime
-
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.venta_model import Venta
-from models.producto_model import Producto
 from models.cliente_model import Cliente
+from models.empleado_model import Empleado
+from models.modelo_vehiculo_model import ModeloVehiculo
+from models.detalle_venta_model import DetalleVenta
+from models.producto_model import Producto
+from database import db
 
-from views import venta_view
+venta_bp = Blueprint('venta', __name__, url_prefix='/ventas')
 
-venta_bp = Blueprint('venta',__name__,url_prefix='/ventas')
-
-@venta_bp.route("/")
+@venta_bp.route('/')
 def index():
-    # Recupera todos los registros de ventas
     ventas = Venta.get_all()
-    return venta_view.list(ventas)
+    return render_template('ventas/index.html', ventas=ventas)
 
-@venta_bp.route("/create", methods=['GET','POST'])
+@venta_bp.route('/create', methods=['GET', 'POST'])
 def create():
-    if request.method == 'POST':
-        cliente_id = request.form['cliente_id']
-        producto_id = request.form['producto_id']
-        cantidad = request.form['cantidad']
-        fecha_str = request.form['fecha']
-        
-        fecha = datetime.strptime(fecha_str,'%Y-%m-%d').date()
+    clientes = Cliente.query.all()
+    empleados = Empleado.query.all()
+    modelos = ModeloVehiculo.get_all()
+    productos = Producto.get_all()
 
-        
-        venta = Venta(cliente_id=cliente_id,producto_id=producto_id,cantidad=cantidad,fecha=fecha)
+    if request.method == 'POST':
+        cliente_id = request.form.get('cliente_id')
+        empleado_id = request.form.get('empleado_id')
+        metodo_pago = request.form.get('metodo_pago')
+        modelo_vehiculo_id = request.form.get('modelo_vehiculo_id') or None
+        total = float(request.form.get('total') or 0)
+
+        # Crear la venta
+        venta = Venta(
+            cliente_id=cliente_id,
+            empleado_id=empleado_id,
+            metodo_pago=metodo_pago,
+            modelo_vehiculo_id=modelo_vehiculo_id,
+            total=total
+        )
         venta.save()
-        return redirect(url_for('venta.index'))
-    
-    clientes = Cliente.query.all()
-    productos = Producto.query.all()
-    
-    return venta_view.create(clientes, productos)
 
-@venta_bp.route("/edit/<int:id>",methods=['GET','POST'])
-def edit(id):
-    venta = Venta.get_by_id(id)
-    if request.method == 'POST':
-        cliente_id = request.form['cliente_id']
-        producto_id = request.form['producto_id']
-        cantidad = request.form['cantidad']
-        fecha_str = request.form['fecha']
-        
-        fecha = datetime.strptime(fecha_str,'%Y-%m-%d').date()
-        #actualizar
-        venta.update(cliente_id=cliente_id,producto_id=producto_id,cantidad=cantidad,fecha=fecha)
-        return redirect(url_for('venta.index'))
-    
-    clientes = Cliente.query.all()
-    productos = Producto.query.all()
-    return venta_view.edit(venta,clientes,productos)
+        # Aquí puedes procesar detalles (productos, cantidades, precios)
+        # Por simplicidad, luego puedes extender este bloque
 
-@venta_bp.route("/delete/<int:id>")
-def delete(id):
-    venta = Venta.get_by_id(id)
-    venta.delete()
-    return redirect(url_for('venta.index'))
+        flash('Venta creada correctamente.', 'success')
+        return redirect(url_for('venta.index'))
+
+    return render_template('ventas/create.html', clientes=clientes, empleados=empleados, modelos=modelos, productos=productos)
