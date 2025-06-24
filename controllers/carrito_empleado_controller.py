@@ -35,12 +35,16 @@ def agregar():
         carrito[producto_id] = {
             'nombre': producto.nombre,
             'precio': producto.precio,
-            'cantidad': 1
+            'cantidad': 1,
+            'imagen': producto.imagen  # **Importante**
         }
 
     session['carrito'] = carrito
+    print("Carrito guardado en sesión:", carrito)  # Para debug
     flash(f"{producto.nombre} añadido al carrito", "success")
     return redirect(url_for('empleado.productos'))
+
+
 
 @carrito_empleado_bp.route('/')
 def mostrar_carrito():
@@ -80,6 +84,7 @@ def disminuir(producto_id):
             carrito.pop(producto_id)
     session['carrito'] = carrito
     return redirect(url_for('carrito_empleado.mostrar_carrito'))
+
 
 @carrito_empleado_bp.route('/confirmar', methods=['POST'])
 def confirmar_compra():

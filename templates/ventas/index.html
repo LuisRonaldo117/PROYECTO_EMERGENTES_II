@@ -1,48 +1,145 @@
 {% extends 'base.html' %}
 
-{% block title %}VENTAS{% endblock %}
+{% block title %}Ventas{% endblock %}
+
+{% block styles %}
+<style>
+  body {
+    background-color: #ffffff;
+    color: #222;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  h1 {
+    margin-bottom: 10px;
+    color: #1a237e;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(26, 35, 126, 0.25);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.90rem;
+  }
+
+  thead {
+    background-color: #1a237e;
+    color: white;
+  }
+
+  thead th {
+    padding: 12px 15px;
+    font-weight: 700;
+    text-align: center;
+    border: 1px solid #283593;
+  }
+
+  tbody tr {
+    background-color: #f3f6fc;
+    border-bottom: 1px solid #c5cae9;
+    transition: background-color 0.3s ease;
+  }
+
+  tbody tr:nth-child(odd) {
+    background-color: #e8ebf9;
+  }
+
+  tbody tr:hover {
+    background-color: #d1d9ff;
+    color: #1a237e;
+  }
+
+  tbody td {
+    padding: 12px 15px;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #c5cae9;
+    color: #1a237e;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .actions a {
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    text-decoration: none;
+    font-weight: 600;
+    color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.3s ease;
+  }
+
+  .actions a.view {
+    background-color: #3949ab;
+  }
+
+  .actions a.view:hover {
+    background-color: #283593;
+  }
+
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="content-container">
-    <h1>Lista de Ventas</h1>
+<div class="container">
+  <h1>Lista de Ventas</h1>
 
-    <a href="#" class="btn btn-success mb-3">Nuevo</a>
-
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Cliente</th>
-                <th>Empleado</th>
-                <th>Fecha</th>
-                <th>Método de Pago</th>
-                <th>Vehículo</th>
-                <th>Total</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for venta in ventas %}
-            <tr>
-                <td>{{ venta.id }}</td>
-                <td>{{ venta.cliente.nombre }}</td>
-                <td>{{ venta.empleado.nombre }}</td>
-                <td>{{ venta.fecha.strftime('%d/%m/%Y') }}</td>
-                <td>{{ venta.metodo_pago }}</td>
-                <td>
-                    {% if venta.modelo_vehiculo %}
-                        {{ venta.modelo_vehiculo.marca }} {{ venta.modelo_vehiculo.modelo }} ({{ venta.modelo_vehiculo.anio }})
-                    {% else %}
-                        N/A
-                    {% endif %}
-                </td>
-                <td>{{ venta.total }}</td>
-                <td>
-                    <a href="#" class="btn btn-info">Ver detalles</a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Cliente</th>
+        <th>Responsable</th>
+        <th>Fecha</th>
+        <th>Método de Pago</th>
+        <th>Vehículo</th>
+        <th>Total (Bs.)</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for venta in ventas %}
+      <tr>
+        <td>{{ venta.id }}</td>
+        <td>{{ venta.cliente.nombre }}</td>
+        <td>{{ venta.empleado.nombre }}</td>
+        <td>{{ venta.fecha.strftime('%d/%m/%Y') }}</td>
+        <td>{{ venta.metodo_pago }}</td>
+        <td>
+          {% if venta.modelo_vehiculo %}
+            {{ venta.modelo_vehiculo.marca }} {{ venta.modelo_vehiculo.modelo }} ({{ venta.modelo_vehiculo.anio }})
+          {% else %}
+            N/A
+          {% endif %}
+        </td>
+        <td>{{ '%.2f'|format(venta.total) }}</td>
+        <td class="actions">
+          <a href="{{ url_for('venta.detalle', venta_id=venta.id) }}" class="view">Ver detalles</a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="8" style="font-style: italic; color: #1a237e;">No hay ventas registradas.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 {% endblock %}

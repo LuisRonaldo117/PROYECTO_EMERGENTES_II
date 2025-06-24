@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+{% block title %}Factura de Venta{% endblock %}
+
+{% block styles %}
+<style>
+.factura-container {
+    background: #fff;
+    padding: 30px;
+    margin-top: 1px;
+    border-radius: 10px;
+    font-family: 'Segoe UI', sans-serif;
+
+    max-height: 100%; /* Más alto */
+    overflow-y: auto;
+}
+
+
+    .factura-title {
+        background-color: #1a237e;
+        color: white;
+        text-align: center;
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 25px;
+    }
+
+    .factura-info {
+    background-color: #e3f2fd;
+    display: flex;
+    padding: 15px 30px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.info-bloque {
+    flex: 1;
+}
+
+.info-bloque p {
+    margin: 2px 0;
+    text-align: left;
+}
+
+
+    .factura-vehiculo {
+        background-color: #fce4ec;
+        padding: 10px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        font-weight: 500;
+    }
+
+.factura-table thead th {
+    background-color: #000 !important;
+    color: #fff !important;
+    text-align: center !important;
+    vertical-align: middle;
+    font-weight: bold;
+}
+
+.factura-table tbody td {
+    text-align: center;
+    vertical-align: middle;
+}
+tr {
+  page-break-inside: avoid !important;
+}
+
+.factura-footer {
+    margin-top: -10px;
+    padding-top: 10px;
+    border-top: 2px dashed #999;
+    font-size: 18px;
+    text-align: right;
+}
+
+.factura-footer h5 {
+    margin: 0;
+    padding-top: 5px;
+}
+
+.factura-footer strong {
+    color: #c62828;
+    font-size: 20px;
+}
+
+.separador {
+    border-top: 2px dashed #444;
+    margin: 30px 0 10px;
+    position: relative;
+    text-align: center;
+    font-size: 3rem;
+}
+
+.separador-title {
+    background: #fff;
+    font-weight: bold;
+    padding: 0 15px;
+    position: relative;
+    top: -13px;
+    display: inline-block;
+    color: #1a237e;
+    font-size: 16px;
+    letter-spacing: 2px;
+    font-size: 1.5rem;
+}
+
+
+    .factura-buttons {
+        margin-top: 30px;
+        display: flex;
+        gap: 10px;
+    }
+
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+
+        #factura, #factura * {
+            visibility: visible;
+        }
+
+        #factura {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            font-size: 11px;
+            line-height: 1.1;
+        }
+
+        .no-print {
+            display: none !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container factura-container" id="factura">
+    <div class="factura-title">
+        <h3>Factura de Venta N° {{ '%04d' | format(venta.id) }}</h3>
+    </div>
+
+<div class="factura-info">
+    <div class="info-bloque">
+        <p><strong>Cliente:</strong> {{ venta.cliente.nombre }}</p>
+        <p><strong>Teléfono:</strong> {{ venta.cliente.telefono }}</p>
+        <p><strong>Email:</strong> {{ venta.cliente.email }}</p>
+    </div>
+    <div class="info-bloque">
+        <p><strong>Empleado:</strong> {{ venta.empleado.nombre }}</p>
+        <p><strong>Fecha:</strong> {{ venta.fecha.strftime('%d/%m/%Y %H:%M:%S') }}</p>
+        <p><strong>Método de Pago:</strong> {{ venta.metodo_pago }}</p>
+    </div>
+</div>
+
+
+    {% if venta.modelo_vehiculo %}
+    <div class="factura-vehiculo">
+        <p><strong>Vehículo:</strong> {{ venta.modelo_vehiculo.marca }} {{ venta.modelo_vehiculo.modelo }} ({{ venta.modelo_vehiculo.anio }})</p>
+    </div>
+    {% endif %}
+
+    <div class="separador">
+        <span class="separador-title">Detalle de Productos</span>
+    </div>
+
+    <table class="table table-bordered factura-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario (Bs.)</th>
+                <th>Subtotal (Bs.)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for detalle in venta.detalles %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ detalle.producto.nombre }}</td>
+                <td>{{ detalle.cantidad }}</td>
+                <td>{{ '%.2f'|format(detalle.precio_unitario) }}</td>
+                <td>{{ '%.2f'|format(detalle.subtotal) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="factura-footer">
+        <h5><strong>Total: Bs. {{ '%.2f'|format(venta.total) }}</strong></h5>
+    </div>
+
+    <div class="factura-buttons no-print">
+        <a href="{{ url_for('venta.index') }}" class="btn btn-success">← Volver</a>
+        <button onclick="window.print()" class="btn btn-primary">🖨 Imprimir</button>
+        <button onclick="descargarPDF()" class="btn btn-danger">⬇ Descargar PDF</button>
+    </div>
+</div>
+
+<!-- Script para descargar como PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+    function descargarPDF() {
+        const botones = document.querySelectorAll('.factura-buttons');
+        botones.forEach(b => b.style.display = 'none');
+
+        const element = document.getElementById('factura');
+        const opt = {
+            margin: 0.5,
+            filename: 'Factura_Venta_{{ venta.id }}.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(element).save().then(() => {
+            botones.forEach(b => b.style.display = '');
+        });
+    }
+</script>
+{% endblock %}

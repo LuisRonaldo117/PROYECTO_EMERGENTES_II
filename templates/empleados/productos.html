@@ -3,43 +3,133 @@
 {% block title %}Productos - Empleado{% endblock %}
 
 {% block content %}
-  <h3 class="mb-4">Buscar por categorías</h3>
-  <form method="GET" class="mb-4 d-flex align-items-center gap-3">
-    <select name="categoria_id" class="form-select" style="max-width: 300px;">
-      <option value="" {% if not categoria_seleccionada %}selected{% endif %}>Todas las categorías</option>
-      {% for cat in categorias %}
-        <option value="{{ cat.id }}" {% if categoria_seleccionada == cat.id %}selected{% endif %}>{{ cat.nombre }}</option>
-      {% endfor %}
-    </select>
 
-    <button type="submit" class="btn btn-primary px-4">Filtrar</button>
-  </form>
+<style>
+  /* Contenedor general de productos */
+  .product-card {
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(13, 110, 253, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
 
-  <div class="row row-cols-1 row-cols-md-4 g-4">
-    {% for producto in productos %}
-      <div class="col">
-        <div class="card h-100">
-          {% if producto.imagen %}
-            <img class="product-image" src="{{ url_for('static', filename='img/productos/' ~ producto.imagen) }}" alt="{{ producto.nombre }}" />
-          {% else %}
-            <div style="height: 180px; display: flex; align-items: center; justify-content: center; background: #f0f0f0; color: #999;">
-              Sin imagen
-            </div>
-          {% endif %}
-          <div class="card-body text-center">
-            <h5 class="card-title">{{ producto.nombre }}</h5>
-            <p class="card-text">Bs {{ "%.2f"|format(producto.precio) }}</p>
-<form method="POST" action="{{ url_for('carrito_empleado.agregar') }}">
-  <input type="hidden" name="producto_id" value="{{ producto.id }}">
-  <button type="submit" class="btn btn-primary btn-sm">
-    <i class="bi bi-cart-plus-fill"></i> Añadir
-  </button>
+  .product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(13, 110, 253, 0.3);
+  }
+
+  .product-image {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    height: 180px;
+    object-fit: cover;
+    width: 100%;
+    box-shadow: inset 0 -3px 10px rgba(0,0,0,0.1);
+  }
+
+  .no-image-placeholder {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e3e8f5;
+    color: #6c757d;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .card-body {
+    padding: 1.25rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .card-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #0d6efd;
+    margin-bottom: 0.5rem;
+    min-height: 3em; /* Para que todas las tarjetas tengan títulos uniformes */
+  }
+
+  .price {
+    font-size: 1.2rem;
+    color: #198754;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .stock {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+  }
+
+  .btn-add {
+    background: #0d6efd;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 30px;
+    padding: 0.45rem 1.5rem;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 6px 20px rgba(13, 110, 253, 0.3);
+  }
+
+  .btn-add:hover {
+    background-color: #0846b7;
+    box-shadow: 0 8px 28px rgba(8, 70, 183, 0.5);
+  }
+
+  .btn-add i {
+    margin-right: 6px;
+    font-size: 1.1rem;
+    vertical-align: middle;
+  }
+</style>
+
+<h3 class="mb-4">Buscar por categorías</h3>
+<form method="GET" class="mb-4 d-flex align-items-center gap-3 flex-wrap">
+  <select name="categoria_id" class="form-select" style="max-width: 300px;">
+    <option value="" {% if not categoria_seleccionada %}selected{% endif %}>Todas las categorías</option>
+    {% for cat in categorias %}
+      <option value="{{ cat.id }}" {% if categoria_seleccionada == cat.id %}selected{% endif %}>{{ cat.nombre }}</option>
+    {% endfor %}
+  </select>
+
+  <button type="submit" class="btn btn-primary px-4">Filtrar</button>
 </form>
 
-
-          </div>
+<div class="row row-cols-1 row-cols-md-4 g-4">
+  {% for producto in productos %}
+  <div class="col">
+    <div class="product-card h-100">
+      {% if producto.imagen %}
+        <img class="product-image" src="{{ url_for('static', filename='img/productos/' ~ producto.imagen) }}" alt="{{ producto.nombre }}" />
+      {% else %}
+        <div class="no-image-placeholder">
+          Sin imagen
         </div>
+      {% endif %}
+      <div class="card-body text-center d-flex flex-column">
+        <h5 class="card-title">{{ producto.nombre }}</h5>
+        <p class="price">Bs {{ "%.2f"|format(producto.precio) }}</p>
+        <p class="stock">Cantidad disponible: <strong>{{ producto.stock if producto.stock is defined else 'N/D' }}</strong></p>
+        <form method="POST" action="{{ url_for('carrito_empleado.agregar') }}" class="mt-auto">
+          <input type="hidden" name="producto_id" value="{{ producto.id }}">
+          <button type="submit" class="btn btn-add btn-sm">
+            <i class="bi bi-cart-plus-fill"></i> Añadir
+          </button>
+        </form>
       </div>
-    {% endfor %}
+    </div>
   </div>
+  {% endfor %}
+</div>
+
 {% endblock %}

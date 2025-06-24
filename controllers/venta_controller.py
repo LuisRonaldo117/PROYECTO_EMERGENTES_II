@@ -45,3 +45,10 @@ def create():
         return redirect(url_for('venta.index'))
 
     return render_template('ventas/create.html', clientes=clientes, empleados=empleados, modelos=modelos, productos=productos)
+
+
+# 🧾 NUEVA RUTA: Ver detalle de la venta como factura
+@venta_bp.route('/<int:venta_id>/detalle')
+def detalle(venta_id):
+    venta = Venta.query.get_or_404(venta_id)
+    return render_template('ventas/detalle.html', venta=venta)

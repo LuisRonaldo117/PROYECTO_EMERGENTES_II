@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+
+{% block title %}Historial de Compras{% endblock %}
+
+{% block styles %}
+<style>
+  /* Contenedor con ancho carta y centrado para PDF */
+  #contenidoPDF {
+    max-width: 8.5in; /* ancho carta */
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+  }
+
+  /* Evitar saltos dentro de estos elementos para mantener bloques juntos */
+  h1, .venta-block, table, thead, tbody, tr, th, td {
+    page-break-inside: avoid !important;
+    page-break-after: auto !important;
+  }
+
+  /* Forzar evitar salto después del título, pero sin salto antes */
+  h1 {
+    /* page-break-before: always; */  /* <-- Línea comentada */
+    page-break-after: avoid;
+
+    color: #1a237e;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 700;
+    font-size: 2rem;
+  }
+
+  /* Mantener bloques de venta juntos */
+  .venta-block {
+    page-break-before: avoid;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+
+    margin-bottom: 30px;
+    border: 1px solid #283593;
+    border-radius: 8px;
+    padding: 15px 20px;
+    background-color: #f3f6fc;
+    position: relative;
+  }
+
+  .venta-header {
+    font-weight: 700;
+    color: #1a237e;
+    margin-bottom: 10px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 0.95rem;
+  }
+
+  thead {
+    background-color: #1a237e;
+    color: white;
+  }
+
+  thead th {
+    padding: 10px 12px;
+    border: 1px solid #283593;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  tbody td {
+    border: 1px solid #c5cae9;
+    padding: 8px 12px;
+    text-align: center;
+    color: #1a237e;
+    font-weight: 600;
+  }
+
+  /* Estilo botón pequeño dentro del bloque venta */
+  .btn-venta-pdf {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 0.8rem;
+    padding: 5px 10px;
+  }
+
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container" id="contenidoPDF">
+  <h1 id="tituloPDF">Historial de Compras de {{ cliente.nombre }}</h1>
+
+  <div id="ventasContenedor">
+    {% if cliente.ventas %}
+      {% for venta in cliente.ventas %}
+      <div class="venta-block" id="venta-{{ venta.id }}">
+        <div class="venta-header">
+          Factura #{{ '%04d' | format(venta.id) }} - Fecha: {{ venta.fecha.strftime('%d/%m/%Y %H:%M:%S') }} - Total: Bs. {{ '%.2f'|format(venta.total) }}
+        </div>
+
+        <button class="btn btn-primary btn-venta-pdf" onclick="descargarVentaPDF('{{ venta.id }}', this)">
+          Descargar PDF de esta venta
+        </button>
+
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Precio Unitario (Bs.)</th>
+              <th>Subtotal (Bs.)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for detalle in venta.detalles %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ detalle.producto.nombre }}</td>
+              <td>{{ detalle.cantidad }}</td>
+              <td>{{ '%.2f'|format(detalle.precio_unitario) }}</td>
+              <td>{{ '%.2f'|format(detalle.subtotal) }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endfor %}
+    {% else %}
+      <p style="text-align:center; color:#1a237e; font-style: italic;">No hay historial de compras para este cliente.</p>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Botones generales -->
+<div class="no-print text-center mt-4" id="botonesAccion">
+  <a href="{{ url_for('cliente.index') }}" class="btn btn-success" style="padding: 10px 20px; font-weight: 700;">
+    ← Volver a Clientes
+  </a>
+
+  <button onclick="descargarPDF()" class="btn btn-danger" style="padding: 10px 20px; font-weight: 700; margin-left: 10px;">
+    ⬇ Descargar PDF completo
+  </button>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+  // Descarga el PDF completo (todo el contenido)
+  function descargarPDF() {
+    const botones = document.getElementById('botonesAccion');
+    const botonesVenta = document.querySelectorAll('.btn-venta-pdf');
+
+    // Ocultar botones generales y botones "Descargar PDF de esta venta"
+    botones.style.display = 'none';
+    botonesVenta.forEach(btn => btn.style.display = 'none');
+
+    const element = document.getElementById('contenidoPDF');
+    const opt = {
+      margin: 0.3,
+      filename: 'Historial_{{ cliente.nombre }}.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: {
+        scale: 1.5,
+        useCORS: true,
+        scrollY: 0,
+        scrollX: 0,
+        logging: false
+      },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save().then(() => {
+      // Restaurar botones después de guardar
+      botones.style.display = '';
+      botonesVenta.forEach(btn => btn.style.display = 'inline-block');
+    });
+  }
+
+  // Descarga PDF solo para una venta específica con título cliente arriba
+  function descargarVentaPDF(ventaId, boton) {
+    const botones = document.getElementById('botonesAccion');
+    const botonesVenta = document.querySelectorAll('.btn-venta-pdf');
+    const titulo = document.getElementById('tituloPDF');
+    const ventasContenedor = document.getElementById('ventasContenedor');
+
+    // Ocultar botones generales y todos botones venta
+    botones.style.display = 'none';
+    botonesVenta.forEach(btn => btn.style.display = 'none');
+
+    // Ocultar todas las ventas excepto la seleccionada
+    const todasVentas = ventasContenedor.querySelectorAll('.venta-block');
+    todasVentas.forEach(div => {
+      div.style.display = 'none';
+    });
+
+    const ventaSeleccionada = document.getElementById('venta-' + ventaId);
+    ventaSeleccionada.style.display = 'block';
+
+    // Ocultar botón específico de esta venta
+    boton.style.display = 'none';
+
+    // Crear un contenedor temporal que incluya título + venta seleccionada
+    const tempContenedor = document.createElement('div');
+    tempContenedor.style.maxWidth = '8.5in';
+    tempContenedor.style.marginLeft = 'auto';
+    tempContenedor.style.marginRight = 'auto';
+    tempContenedor.style.boxSizing = 'border-box';
+    tempContenedor.appendChild(titulo.cloneNode(true));
+    tempContenedor.appendChild(ventaSeleccionada.cloneNode(true));
+
+    const opt = {
+      margin: 0.3,
+      filename: 'Venta_{{ cliente.nombre }}_' + ventaId + '.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: {
+        scale: 1.5,
+        useCORS: true,
+        scrollY: 0,
+        scrollX: 0,
+        logging: false
+      },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(tempContenedor).save().then(() => {
+      // Restaurar visibilidad y botones
+      botones.style.display = '';
+      botonesVenta.forEach(btn => btn.style.display = 'inline-block');
+      todasVentas.forEach(div => div.style.display = 'block');
+      boton.style.display = 'inline-block';
+    });
+  }
+</script>
+{% endblock %}

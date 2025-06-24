@@ -102,6 +102,16 @@ def edit(id):
 
 @producto_bp.route("/delete/<int:id>")
 def delete(id):
+    from models.detalle_venta_model import DetalleVenta  # o cambia al nombre correcto
+
     producto = Producto.get_by_id(id)
-    producto.delete()
+    if not producto:
+        return redirect(url_for('producto.index'))
+
+    DetalleVenta.query.filter_by(producto_id=id).delete()
+    ProductoProveedor.query.filter_by(producto_id=id).delete()
+    db.session.delete(producto)
+    db.session.commit()
+
     return redirect(url_for('producto.index'))
+

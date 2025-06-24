@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %}Panel de Inicio{% endblock %}
+
+{% block styles %}
+<style>
+  /* Container principal centrado */
+  .container {
+    max-width: 1100px;
+    margin: 0px auto;
+    padding: 0 20px;
+  }
+
+  /* Título */
+  h1 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    color: #34495e;
+    margin-bottom: 40px;
+    text-align: center;
+    letter-spacing: 1.2px;
+  }
+
+  /* Grid de tarjetas */
+  .dashboard-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+  }
+
+  /* Tarjeta */
+  .card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 30px 25px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 18px 30px rgba(0,0,0,0.15);
+  }
+
+  /* Ícono en círculo */
+  .card-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    border-radius: 50%;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    box-shadow: 0 4px 15px rgba(101, 65, 208, 0.5);
+    margin-bottom: 20px;
+  }
+
+  /* Título tarjeta */
+  .card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+    color: #2c3e50;
+    letter-spacing: 0.8px;
+  }
+
+  /* Valor principal */
+  .card p {
+    font-size: 2.6rem;
+    font-weight: 800;
+    color: #34495e;
+    font-family: 'Roboto Mono', monospace;
+    margin: 0;
+  }
+
+  /* Colores por tarjeta */
+  .card.total-productos .card-icon {
+    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+  }
+
+  .card.poco-stock .card-icon {
+    background: linear-gradient(135deg, #36d1dc, #5b86e5);
+  }
+
+  .card.ventas-dia .card-icon {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+  }
+
+  .card.ganancias-dia .card-icon {
+    background: linear-gradient(135deg, #f7971e, #ffd200);
+  }
+
+  .card.clientes-registrados .card-icon {
+    background: linear-gradient(135deg, #e55d87, #5fc3e4);
+  }
+
+  .card.empleados-activos .card-icon {
+    background: linear-gradient(135deg, #7b4397, #dc2430);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h1>Panel de Inicio</h1>
+  <div class="dashboard-container">
+
+    <div class="card total-productos">
+      <div class="card-icon">
+        <i class="bi bi-box-seam"></i>
+      </div>
+      <h3>Total de Productos</h3>
+      <p>{{ total_productos }}</p>
+    </div>
+
+    <div class="card poco-stock">
+      <div class="card-icon">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+      </div>
+      <h3>Productos con poco stock</h3>
+      <p>{{ productos_bajo_stock }}</p>
+    </div>
+
+    <div class="card ventas-dia">
+      <div class="card-icon">
+        <i class="bi bi-cart-check-fill"></i>
+      </div>
+      <h3>Ventas del Día</h3>
+      <p>{{ ventas_hoy }}</p>
+    </div>
+
+    <div class="card ganancias-dia">
+      <div class="card-icon">
+        <i class="bi bi-cash-stack"></i>
+      </div>
+      <h3>Ganancias del Día (Bs.)</h3>
+      <p>{{ ganancias_hoy | round(2) }}</p>
+    </div>
+
+    <div class="card clientes-registrados">
+      <div class="card-icon">
+        <i class="bi bi-people-fill"></i>
+      </div>
+      <h3>Clientes Registrados</h3>
+      <p>{{ total_clientes }}</p>
+    </div>
+
+    <div class="card empleados-activos">
+      <div class="card-icon">
+        <i class="bi bi-person-badge-fill"></i>
+      </div>
+      <h3>Empleados Activos</h3>
+      <p>{{ total_empleados }}</p>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

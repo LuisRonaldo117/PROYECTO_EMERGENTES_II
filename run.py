@@ -4,7 +4,7 @@ from werkzeug.security import check_password_hash
 
 from controllers import usuario_controller, cliente_controller, producto_controller, venta_controller, empleado_controller,proveedor_controller
 from controllers import categoria_controller, empleado_cliente_controller, carrito_empleado_controller
-from controllers import detalle_venta_controller, modelo_vehiculo_controller
+from controllers import detalle_venta_controller, modelo_vehiculo_controller, inicio_controller
 from models.usuario_model import Usuario  # Tu modelo Usuario debe implementar UserMixin
 from database import db
 
@@ -38,6 +38,7 @@ app.register_blueprint(empleado_cliente_controller.empleado_cliente_bp)
 app.register_blueprint(carrito_empleado_controller.carrito_empleado_bp)
 app.register_blueprint(detalle_venta_controller.detalle_venta_bp)
 app.register_blueprint(modelo_vehiculo_controller.modelo_vehiculo_bp)
+app.register_blueprint(inicio_controller.inicio_bp)
 
 # Context processor para navegación activa
 @app.context_processor
@@ -95,7 +96,7 @@ def admin_dashboard():
     if current_user.rol != 'admin':
         flash('Acceso denegado: solo administradores', 'danger')
         return redirect(url_for('home'))
-    return render_template('base.html')
+    return render_template('inicio/panel_inicio.html')
 
 # Dashboard empleado protegido con login_required y control rol
 @app.route('/empleado')
@@ -104,7 +105,9 @@ def empleado_dashboard():
     if current_user.rol != 'empleado':
         flash('Acceso denegado: solo empleados', 'danger')
         return redirect(url_for('home'))
-    return render_template('empleados/base.html')
+
+    return redirect(url_for('empleado.productos'))
+
 
 @app.route('/logout')
 @login_required

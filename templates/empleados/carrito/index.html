@@ -3,86 +3,269 @@
 {% block title %}Carrito de Compras{% endblock %}
 
 {% block content %}
-<h2>Carrito de Compras</h2>
 
-<!-- Formulario principal -->
-<form method="POST" action="{{ url_for('carrito_empleado.confirmar_compra') }}">
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <label for="cliente_id" class="form-label"><strong>Buscar Cliente</strong></label>
-      <select name="cliente_id" id="cliente_id" class="form-select select2" required>
-        <option value="">Seleccione un cliente</option>
-        {% for cliente in clientes %}
-          <option value="{{ cliente.id }}">{{ cliente.nombre }} - {{ cliente.telefono }}</option>
-        {% endfor %}
-      </select>
-    </div>
-  </div>
+<style>
+ .carrito-container {
+  max-width: 1000px;
+  margin: 0rem auto;
+  background: #f9fafc;
+  padding: 0rem 3rem;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(13, 110, 253, 0.15);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+  transition: background-color 0.3s ease;
+}
+.carrito-container h2 {
+  text-align: center;
+  font-weight: 900; /* más grueso */
+  font-size: 2.4rem;
+  color: #0d6efd;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 10px #a3c7ff;
+}
+table tbody td form button {
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 2.5px solid #0d6efd;
+  background: transparent;
+  color: #0d6efd;
+  font-weight: 700;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  margin: 0 3px;
+  box-shadow: 0 2px 6px rgba(13, 110, 253, 0.25);
+}
 
-  <div class="row mb-3">
-    <div class="col-md-4">
-      <label for="metodo_pago" class="form-label"><strong>Método de Pago</strong></label>
-      <select name="metodo_pago" id="metodo_pago" class="form-select" required>
-        <option value="">Seleccione</option>
-        <option value="Efectivo">Efectivo</option>
-        <option value="Tarjeta">Tarjeta</option>
-        <option value="Pago QR">QR</option>
-      </select>
-    </div>
+table tbody td form button:hover {
+  background-color: #0d6efd;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(13, 110, 253, 0.5);
+}
 
-    <div class="col-md-6">
-      <label for="modelo_vehiculo_id" class="form-label"><strong>Modelo de Vehículo</strong></label>
-      <select name="modelo_vehiculo_id" id="modelo_vehiculo_id" class="form-select">
-        <option value="">Sin vehículo</option>
-        {% for modelo in modelos_vehiculos %}
-          <option value="{{ modelo.id }}">
-            {{ modelo.marca }} {{ modelo.modelo }} ({{ modelo.anio }})
-          </option>
-        {% endfor %}
-      </select>
-    </div>
-  </div>
+.total-container {
+  text-align: right;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #0d6efd;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 3px solid #0d6efd;
+  text-shadow: 0 0 10px #a3c7ff;
+}
+
+.actions {
+  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.actions a,
+.actions button {
+  font-size: 1.3rem;
+  padding: 0.85rem 2.5rem;
+  border-radius: 35px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8px 25px rgba(13, 110, 253, 0.35);
+  user-select: none;
+}
+
+.actions a.btn-primary {
+  background-color: #0d6efd;
+  color: #fff;
+  text-decoration: none;
+}
+
+.actions a.btn-primary:hover {
+  background-color: #083aaf;
+  box-shadow: 0 10px 30px rgba(8, 58, 175, 0.6);
+}
+
+.actions button.btn-success {
+  background-color: #198754;
+  color: #fff;
+  box-shadow: 0 8px 25px rgba(25, 135, 84, 0.5);
+}
+
+.actions button.btn-success:hover {
+  background-color: #11632f;
+  box-shadow: 0 10px 30px rgba(17, 99, 47, 0.75);
+}
+
+.actions form button.btn-danger {
+  background-color: #dc3545;
+  color: #fff;
+  box-shadow: 0 8px 25px rgba(220, 53, 69, 0.5);
+}
+
+.actions form button.btn-danger:hover {
+  background-color: #7f1f22;
+  box-shadow: 0 10px 30px rgba(127, 31, 34, 0.75);
+}
+
+/* Diseño para carrito vacío */
+.empty-cart {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #555;
+  font-size: 1.8rem;
+  font-weight: 600;
+  border: 3px dashed #0d6efd;
+  border-radius: 20px;
+  background: #e9f0ff;
+  box-shadow: 0 8px 24px rgba(13, 110, 253, 0.1);
+  user-select: none;
+}
+
+.empty-cart i {
+  font-size: 6rem;
+  color: #0d6efd;
+  margin-bottom: 1rem;
+  display: inline-block;
+  text-shadow: 0 0 15px #a3c7ff;
+}
+
+.empty-cart p {
+  margin-bottom: 2rem;
+  color: #083aaf;
+}
+
+.empty-cart a.btn {
+  font-size: 1.3rem;
+  padding: 1rem 3rem;
+  background-color: #0d6efd;
+  color: white;
+  border-radius: 35px;
+  box-shadow: 0 8px 30px rgba(13, 110, 253, 0.5);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  user-select: none;
+}
+
+.empty-cart a.btn:hover {
+  background-color: #083aaf;
+  box-shadow: 0 10px 40px rgba(8, 58, 175, 0.7);
+}
+
+</style>
+
+<div class="carrito-container">
+  <h2>Carrito de Compras</h2>
 
   {% if carrito %}
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Producto</th>
-        <th>Precio Unitario</th>
-        <th>Cantidad</th>
-        <th>Subtotal</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for producto_id, item in carrito.items() %}
-      <tr>
-        <td>{{ item.nombre }}</td>
-        <td>{{ item.precio }}</td>
-        <td>
-          <form method="POST" action="{{ url_for('carrito_empleado.disminuir', producto_id=producto_id) }}" style="display:inline;">
-              <button class="btn btn-sm btn-outline-secondary">-</button>
-          </form>
-          <span style="padding: 0 10px;">{{ item.cantidad }}</span>
-          <form method="POST" action="{{ url_for('carrito_empleado.incrementar', producto_id=producto_id) }}" style="display:inline;">
-              <button class="btn btn-sm btn-outline-secondary">+</button>
-          </form>
-        </td>
-        <td>{{ item.precio * item.cantidad }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <p><strong>Total: </strong> {{ total }}</p>
-  {% else %}
-  <p>El carrito está vacío.</p>
-  {% endif %}
 
-  <div class="mt-3">
-    <a href="{{ url_for('empleado.productos') }}" class="btn btn-primary">Seguir comprando</a>
-    <button type="submit" class="btn btn-success">Confirmar Compra</button>
-    <a href="{{ url_for('carrito_empleado.vaciar_carrito') }}" class="btn btn-danger">Vaciar Carrito</a>
+  <!-- Formulario para confirmar compra SOLO con inputs y botón Confirmar -->
+  <form method="POST" action="{{ url_for('carrito_empleado.confirmar_compra') }}">
+    <div class="mb-4 row gx-3 gy-3 justify-content-center">
+      <div class="col-12 col-md-6">
+        <label for="cliente_id" class="form-label"><strong>Buscar Cliente</strong></label>
+        <select name="cliente_id" id="cliente_id" class="form-select select2" required>
+          <option value="">Seleccione un cliente</option>
+          {% for cliente in clientes %}
+            <option value="{{ cliente.id }}">{{ cliente.nombre }} - {{ cliente.telefono }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="mb-4 row gx-3 gy-3 justify-content-center">
+      <div class="col-12 col-md-4">
+        <label for="metodo_pago" class="form-label"><strong>Método de Pago</strong></label>
+        <select name="metodo_pago" id="metodo_pago" class="form-select" required>
+          <option value="">Seleccione Método de Pago</option>
+          <option value="Efectivo">Efectivo</option>
+          <option value="Tarjeta">Tarjeta</option>
+          <option value="Pago QR">QR</option>
+        </select>
+      </div>
+      <div class="col-12 col-md-6">
+        <label for="modelo_vehiculo_id" class="form-label"><strong>Modelo de Vehículo</strong></label>
+        <select name="modelo_vehiculo_id" id="modelo_vehiculo_id" class="form-select">
+          <option value="">Seleccione vehículo</option>
+          {% for modelo in modelos_vehiculos %}
+            <option value="{{ modelo.id }}">
+              {{ modelo.marca }} {{ modelo.modelo }} ({{ modelo.anio }})
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+
+
+    <div class="actions">
+      <a href="{{ url_for('empleado.productos') }}" class="btn btn-primary">Seguir comprando</a>
+      <button type="submit" class="btn btn-success">Confirmar Compra</button>
+    </div>
+  </form>
+
+  <!-- Tabla de productos con botones para aumentar y disminuir cantidad FUERA del formulario anterior -->
+  <table class="table mt-4">
+  <thead>
+    <tr>
+      <th>Imagen</th>
+      <th>Producto</th>
+      <th>Precio</th>
+      <th>Cantidad</th>
+      <th>Subtotal</th>
+      <th>Modificar Cantidad</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for producto_id, item in carrito.items() %}
+    <tr>
+<td>
+  {% if item.imagen %}
+    <img src="{{ url_for('static', filename='img/productos/' ~ item.imagen) }}" alt="{{ item.nombre }}" style="width: 60px; height: auto; border-radius: 6px;" />
+  {% else %}
+    <span>No imagen</span>
+  {% endif %}
+</td>
+
+
+      <td>{{ item.nombre }}</td>
+      <td>${{ "%.2f"|format(item.precio) }}</td>
+      <td>{{ item.cantidad }}</td>
+      <td>${{ "%.2f"|format(item.precio * item.cantidad) }}</td>
+      <td style="white-space: nowrap;">
+        <form method="POST" action="{{ url_for('carrito_empleado.disminuir', producto_id=producto_id) }}" style="display:inline;">
+          <button type="submit" class="btn btn-sm btn-outline-primary" title="Disminuir cantidad" formnovalidate>−</button>
+        </form>
+        <form method="POST" action="{{ url_for('carrito_empleado.incrementar', producto_id=producto_id) }}" style="display:inline;">
+          <button type="submit" class="btn btn-sm btn-outline-primary" title="Aumentar cantidad" formnovalidate>+</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+
+  </tbody>
+</table>
+        <div class="total-container">
+      Total: ${{ "%.2f"|format(total) }}
+        <form method="POST" action="{{ url_for('carrito_empleado.vaciar_carrito') }}" style="margin-top: 1rem; text-align: center;">
+    <button type="submit" class="btn btn-danger">Vaciar Carrito</button>
+  </form>
+<br>
+    </div>
+  <!-- Vaciar carrito también fuera del formulario para evitar validación -->
+
+  {% else %}
+  <div class="empty-cart">
+    <i class="bi bi-cart-x"></i>
+    <p>Tu carrito está vacío</p>
+    <a href="{{ url_for('empleado.productos') }}" class="btn">Realizar Compras</a>
   </div>
-</form>
+  {% endif %}
+</div>
 
 <!-- Scripts Select2 -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -98,4 +281,5 @@
     });
   });
 </script>
+
 {% endblock %}
