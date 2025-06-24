@@ -84,6 +84,7 @@
     color: white;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     transition: background-color 0.3s ease;
+    white-space: nowrap;
   }
 
   .actions a.view {
@@ -94,6 +95,49 @@
     background-color: #283593;
   }
 
+  /* ===== Adaptación móvil ===== */
+  @media (max-width: 767.98px) {
+    .container {
+      padding: 15px 10px;
+      margin: 10px;
+      max-width: 100%;
+      box-shadow: none;
+      border-radius: 8px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+    }
+
+    table {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      min-width: 700px; /* para que la tabla no se comprima demasiado */
+      font-size: 0.85rem;
+    }
+
+    thead th, tbody td {
+      padding: 10px 8px;
+      font-size: 0.85rem;
+    }
+
+    .actions {
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+    }
+
+    .actions a {
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      white-space: normal;
+      min-width: 100px;
+      text-align: center;
+    }
+  }
 </style>
 {% endblock %}
 

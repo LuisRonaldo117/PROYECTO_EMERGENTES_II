@@ -4,16 +4,18 @@
 {% block styles %}
 <style>
   body {
-    background-color: #ffffff; /* fondo blanco puro */
+    background-color: #ffffff;
     color: #222;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
+
   h1 {
     margin-bottom: 30px;
-    color: #1a237e; /* azul oscuro */
+    color: #1a237e;
     font-weight: 700;
     text-align: center;
   }
+
   .container {
     max-width: 1500px;
     margin: 0 auto;
@@ -22,9 +24,10 @@
     border-radius: 10px;
     box-shadow: 0 0 12px rgba(26, 35, 126, 0.25);
   }
+
   a.button {
     display: inline-block;
-    background-color: #3949ab; /* azul medio */
+    background-color: #3949ab;
     color: white;
     padding: 10px 18px;
     margin-bottom: 20px;
@@ -33,98 +36,168 @@
     font-weight: 600;
     transition: background-color 0.3s ease;
   }
+
   a.button:hover {
-    background-color: #283593; /* azul más oscuro */
+    background-color: #283593;
   }
+
   table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.9rem;
   }
+
   thead {
-    background-color: #1a237e; /* azul oscuro para encabezados */
+    background-color: #1a237e;
     color: white;
   }
+
   thead th {
     padding: 12px 15px;
     font-weight: 700;
     text-align: center;
     border: 1px solid #283593;
   }
+
   tbody tr {
-    background-color: #f3f6fc; /* azul muy claro */
+    background-color: #f3f6fc;
     border-bottom: 1px solid #c5cae9;
     transition: background-color 0.3s ease;
   }
+
   tbody tr:nth-child(odd) {
-    background-color: #e8ebf9; /* azul claro alternado */
+    background-color: #e8ebf9;
   }
+
   tbody tr:hover {
     background-color: #d1d9ff;
     color: #1a237e;
   }
+
   tbody td {
     padding: 12px 15px;
     text-align: center;
     vertical-align: middle;
     border: 1px solid #c5cae9;
     color: #1a237e;
-    font-size: 0.8rem;       /* Más grande */
-  font-weight: 700; 
+    font-size: 0.8rem;
+    font-weight: 700;
   }
-tbody td.description {
-  text-align: left;
-  max-width: 300px;       /* ancho máximo para que no estire mucho la tabla */
-  white-space: normal;    /* permite que el texto haga salto de línea */
-  overflow-wrap: break-word; /* rompe palabras largas para evitar overflow */
-  word-wrap: break-word;     /* soporte adicional para romper palabras */
-  hyphens: auto;             /* permite guiones si la palabra se corta */
-  /* quita overflow:hidden y text-overflow:ellipsis para mostrar todo el texto */
-}
+
+  tbody td.description {
+    text-align: left;
+    max-width: 300px;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+  }
 
   img.product-image {
-  width: 75px;
-  height: 75px;
+    width: 75px;
+    height: 75px;
+    border-radius: 6px;
+    image-rendering: crisp-edges;
+  }
 
-  border-radius: 6px;
-  image-rendering: crisp-edges;
-
-}
-
-  
   .actions {
-  display: flex;
-  flex-direction: column; /* Apila verticalmente */
-  align-items: center;     /* Centra horizontalmente */
-  gap: 8px;                /* Espacio entre los botones */
-}
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
 
   .actions a {
-  padding: 6px 0;
-  width: 70px; /* MISMO ancho para ambos */
-  text-align: center;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  text-decoration: none;
-  font-weight: 600;
-  color: white;
-  display: inline-block;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* sombra uniforme */
-  transition: background-color 0.3s ease;
-  user-select: none;
-}
+    padding: 6px 0;
+    width: 70px;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    text-decoration: none;
+    font-weight: 600;
+    color: white;
+    display: inline-block;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.3s ease;
+    user-select: none;
+  }
 
   .actions a.edit {
     background-color: #3949ab;
   }
+
   .actions a.edit:hover {
     background-color: #283593;
   }
+
   .actions a.delete {
     background-color: #e53935;
   }
+
   .actions a.delete:hover {
     background-color: #ab2a26;
+  }
+
+  /* ===== Adaptación para móvil ===== */
+  @media (max-width: 767.98px) {
+    .container {
+      padding: 15px 10px;
+      margin: 10px;
+      box-shadow: none;
+      border-radius: 8px;
+      max-width: 100%;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
+    a.button {
+      width: 100%;
+      padding: 12px 0;
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+      text-align: center;
+      display: block;
+    }
+
+    table {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      min-width: 700px; /* permite scroll horizontal */
+      font-size: 0.85rem;
+    }
+
+    thead th, tbody td {
+      padding: 10px 8px;
+      font-size: 0.9rem;
+    }
+
+    tbody td.description {
+      max-width: 200px;
+      font-size: 0.85rem;
+    }
+
+    img.product-image {
+      width: 60px;
+      height: 60px;
+    }
+
+    .actions {
+      flex-direction: row;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: nowrap;
+    }
+
+    .actions a {
+      width: auto;
+      padding: 6px 10px;
+      font-size: 0.9rem;
+    }
   }
 </style>
 {% endblock %}

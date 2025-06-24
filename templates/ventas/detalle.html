@@ -10,21 +10,22 @@
     border-radius: 10px;
     font-family: 'Segoe UI', sans-serif;
 
-    max-height: 100%; /* Más alto */
+    max-height: 100%;
     overflow-y: auto;
+    box-sizing: border-box;
 }
 
+.factura-title {
+    background-color: #1a237e;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+}
 
-    .factura-title {
-        background-color: #1a237e;
-        color: white;
-        text-align: center;
-        padding: 15px;
-        border-radius: 6px;
-        margin-bottom: 25px;
-    }
-
-    .factura-info {
+.factura-info {
     background-color: #e3f2fd;
     display: flex;
     padding: 15px 30px;
@@ -32,6 +33,7 @@
     margin-bottom: 20px;
     justify-content: space-between;
     gap: 20px;
+    box-sizing: border-box;
 }
 
 .info-bloque {
@@ -41,16 +43,24 @@
 .info-bloque p {
     margin: 2px 0;
     text-align: left;
+    font-size: 1rem;
 }
 
+.factura-vehiculo {
+    background-color: #fce4ec;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    font-size: 1rem;
+}
 
-    .factura-vehiculo {
-        background-color: #fce4ec;
-        padding: 10px;
-        border-radius: 6px;
-        margin-bottom: 20px;
-        font-weight: 500;
-    }
+.factura-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    table-layout: fixed;
+}
 
 .factura-table thead th {
     background-color: #000 !important;
@@ -58,12 +68,19 @@
     text-align: center !important;
     vertical-align: middle;
     font-weight: bold;
+    padding: 10px 5px;
+    font-size: 1rem;
+    word-wrap: break-word;
 }
 
 .factura-table tbody td {
     text-align: center;
     vertical-align: middle;
+    padding: 8px 5px;
+    font-size: 0.9rem;
+    word-wrap: break-word;
 }
+
 tr {
   page-break-inside: avoid !important;
 }
@@ -102,40 +119,100 @@ tr {
     top: -13px;
     display: inline-block;
     color: #1a237e;
-    font-size: 16px;
-    letter-spacing: 2px;
     font-size: 1.5rem;
+    letter-spacing: 2px;
 }
 
+/* Botones */
+.factura-buttons {
+    margin-top: 30px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.factura-buttons .btn {
+    min-width: 120px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Scroll para tabla en móvil */
+@media (max-width: 767.98px) {
+    .factura-container {
+        padding: 15px 10px;
+        margin: 10px;
+        max-width: 100%;
+        box-shadow: none;
+        border-radius: 8px;
+    }
+
+    .factura-info {
+        flex-direction: column;
+        padding: 15px 10px;
+        gap: 15px;
+    }
+
+    .info-bloque {
+        flex: unset;
+        width: 100%;
+    }
+
+    .factura-vehiculo {
+        font-size: 1rem;
+        padding: 8px 10px;
+    }
+
+    .factura-table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        min-width: 600px;
+        font-size: 0.9rem;
+    }
+
+    .factura-table thead th, .factura-table tbody td {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+
+    .factura-footer {
+        font-size: 1.1rem;
+        text-align: center;
+    }
+
+    .factura-footer strong {
+        font-size: 1.3rem;
+    }
 
     .factura-buttons {
-        margin-top: 30px;
-        display: flex;
-        gap: 10px;
+        gap: 8px;
     }
 
-    @media print {
-        body * {
-            visibility: hidden;
-        }
-
-        #factura, #factura * {
-            visibility: visible;
-        }
-
-        #factura {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            font-size: 11px;
-            line-height: 1.1;
-        }
-
-        .no-print {
-            display: none !important;
-        }
+    .factura-buttons .btn {
+        min-width: 100%;
+        font-size: 1rem;
+        padding: 12px 10px;
     }
+
+    .factura-title {
+        font-size: 1.4rem;
+        padding: 12px;
+    }
+
+    .separador {
+        font-size: 2rem;
+    }
+
+    .separador-title {
+        font-size: 1.2rem;
+    }
+}
 </style>
 {% endblock %}
 
@@ -145,19 +222,18 @@ tr {
         <h3>Factura de Venta N° {{ '%04d' | format(venta.id) }}</h3>
     </div>
 
-<div class="factura-info">
-    <div class="info-bloque">
-        <p><strong>Cliente:</strong> {{ venta.cliente.nombre }}</p>
-        <p><strong>Teléfono:</strong> {{ venta.cliente.telefono }}</p>
-        <p><strong>Email:</strong> {{ venta.cliente.email }}</p>
+    <div class="factura-info">
+        <div class="info-bloque">
+            <p><strong>Cliente:</strong> {{ venta.cliente.nombre }}</p>
+            <p><strong>Teléfono:</strong> {{ venta.cliente.telefono }}</p>
+            <p><strong>Email:</strong> {{ venta.cliente.email }}</p>
+        </div>
+        <div class="info-bloque">
+            <p><strong>Empleado:</strong> {{ venta.empleado.nombre }}</p>
+            <p><strong>Fecha:</strong> {{ venta.fecha.strftime('%d/%m/%Y %H:%M:%S') }}</p>
+            <p><strong>Método de Pago:</strong> {{ venta.metodo_pago }}</p>
+        </div>
     </div>
-    <div class="info-bloque">
-        <p><strong>Empleado:</strong> {{ venta.empleado.nombre }}</p>
-        <p><strong>Fecha:</strong> {{ venta.fecha.strftime('%d/%m/%Y %H:%M:%S') }}</p>
-        <p><strong>Método de Pago:</strong> {{ venta.metodo_pago }}</p>
-    </div>
-</div>
-
 
     {% if venta.modelo_vehiculo %}
     <div class="factura-vehiculo">
