@@ -5,7 +5,6 @@
 {% block content %}
 
 <style>
-  /* Contenedor general de productos */
   .product-card {
     border-radius: 12px;
     box-shadow: 0 8px 20px rgba(13, 110, 253, 0.15);
@@ -55,7 +54,7 @@
     font-weight: 700;
     color: #0d6efd;
     margin-bottom: 0.5rem;
-    min-height: 3em; /* Para que todas las tarjetas tengan títulos uniformes */
+    min-height: 3em;
   }
 
   .price {
@@ -91,6 +90,19 @@
     font-size: 1.1rem;
     vertical-align: middle;
   }
+
+  @media (max-width: 575.98px) {
+    form.d-flex {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1rem;
+    }
+    form.d-flex select,
+    form.d-flex button {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+  }
 </style>
 
 <h3 class="mb-4">Buscar por categorías</h3>
@@ -105,7 +117,8 @@
   <button type="submit" class="btn btn-primary px-4">Filtrar</button>
 </form>
 
-<div class="row row-cols-1 row-cols-md-4 g-4">
+<!-- Grilla responsive mejorada -->
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
   {% for producto in productos %}
   <div class="col">
     <div class="product-card h-100">
