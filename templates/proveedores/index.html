@@ -24,6 +24,7 @@
     padding: 20px 25px;
     border-radius: 10px;
     box-shadow: 0 0 12px rgba(26, 35, 126, 0.25);
+    box-sizing: border-box;
   }
 
   a.button {
@@ -36,16 +37,24 @@
     text-decoration: none;
     font-weight: 600;
     transition: background-color 0.3s ease;
+    white-space: nowrap;
   }
 
   a.button:hover {
     background-color: #283593;
   }
 
+  /* Contenedor scroll para tabla */
+  .table-responsive-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.9rem;
+    min-width: 600px; /* para activar scroll */
   }
 
   thead {
@@ -81,15 +90,15 @@
     vertical-align: middle;
     border: 1px solid #c5cae9;
     color: #1a237e;
-    font-size: 1.1rem;       /* Más grande */
-  font-weight: 700; 
+    font-size: 1.1rem;
+    font-weight: 700;
   }
 
   .actions {
-   display: flex;
-    justify-content: center;  /* Centra horizontalmente */
-    align-items: center;      /* Centra verticalmente */
-    gap: 5px;  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
   }
 
   .actions a {
@@ -105,6 +114,7 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     transition: background-color 0.3s ease;
     user-select: none;
+    white-space: nowrap;
   }
 
   .actions a.edit {
@@ -122,6 +132,38 @@
   .actions a.delete:hover {
     background-color: #ab2a26;
   }
+
+  /* Responsive para móvil */
+  @media (max-width: 767.98px) {
+    .container {
+      padding: 15px 10px;
+      margin: 0 10px;
+      box-shadow: none;
+      border-radius: 8px;
+    }
+
+    a.button {
+      width: 100%;
+      text-align: center;
+      padding: 12px 0;
+      font-size: 1rem;
+    }
+
+    table {
+      font-size: 0.85rem;
+      min-width: 600px;
+    }
+
+    .actions {
+      gap: 5px;
+    }
+
+    .actions a {
+      width: auto;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+    }
+  }
 </style>
 {% endblock %}
 
@@ -130,34 +172,36 @@
   <h1>Lista de Proveedores</h1>
   <a href="{{ url_for('proveedor.create') }}" class="button">+ Nuevo Proveedor</a>
 
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Contacto</th>
-        <th>Teléfono</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for p in proveedores %}
-      <tr>
-        <td>{{ p.id }}</td>
-        <td>{{ p.nombre }}</td>
-        <td>{{ p.contacto }}</td>
-        <td>{{ p.telefono }}</td>
-        <td class="actions">
-          <a href="{{ url_for('proveedor.edit', id=p.id) }}" class="edit">Editar</a>
-          <a href="{{ url_for('proveedor.delete', id=p.id) }}" class="delete" onclick="return confirm('¿Estás seguro de eliminar este proveedor?');">Eliminar</a>
-        </td>
-      </tr>
-      {% else %}
-      <tr>
-        <td colspan="5" style="color:#1a237e; font-style: italic;">No hay proveedores registrados.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="table-responsive-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Contacto</th>
+          <th>Teléfono</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in proveedores %}
+        <tr>
+          <td>{{ p.id }}</td>
+          <td>{{ p.nombre }}</td>
+          <td>{{ p.contacto }}</td>
+          <td>{{ p.telefono }}</td>
+          <td class="actions">
+            <a href="{{ url_for('proveedor.edit', id=p.id) }}" class="edit">Editar</a>
+            <a href="{{ url_for('proveedor.delete', id=p.id) }}" class="delete" onclick="return confirm('¿Estás seguro de eliminar este proveedor?');">Eliminar</a>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5" style="color:#1a237e; font-style: italic;">No hay proveedores registrados.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock %}

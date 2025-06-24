@@ -24,12 +24,20 @@
     padding: 25px 30px;
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(26, 35, 126, 0.25);
+    box-sizing: border-box;
+  }
+
+  /* Wrapper para scroll horizontal en tablas */
+  .table-responsive-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.95rem;
+    min-width: 600px; /* Fuerza scroll horizontal si es necesario */
   }
 
   thead {
@@ -85,6 +93,7 @@
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     transition: background-color 0.3s ease;
     user-select: none;
+    white-space: nowrap;
   }
 
   .actions a.history {
@@ -94,6 +103,33 @@
   .actions a.history:hover {
     background-color: #283593;
   }
+
+  /* Responsive para móviles */
+  @media (max-width: 767.98px) {
+    .container {
+      padding: 15px 10px;
+      margin: 0 10px;
+      box-shadow: none;
+      border-radius: 8px;
+    }
+
+    table {
+      font-size: 0.9rem;
+      min-width: 600px;
+    }
+
+    .actions {
+      gap: 5px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .actions a {
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      width: auto;
+    }
+  }
 </style>
 {% endblock %}
 
@@ -101,34 +137,35 @@
 <div class="container">
   <h1>Lista de Clientes</h1>
 
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Email</th>
-        <th>Teléfono</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for cliente in clientes %}
-      <tr>
-        <td>{{ cliente.id }}</td>
-        <td>{{ cliente.nombre }}</td>
-        <td>{{ cliente.email }}</td>
-        <td>{{ cliente.telefono }}</td>
-        <td class="actions">
-          <a href="{{ url_for('cliente.historial', id=cliente.id) }}" class="history">Historial</a>
- 
-        </td>
-      </tr>
-      {% else %}
-      <tr>
-        <td colspan="5" style="font-style: italic; color: #1a237e;">No se encontraron clientes.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="table-responsive-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Teléfono</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cliente in clientes %}
+        <tr>
+          <td>{{ cliente.id }}</td>
+          <td>{{ cliente.nombre }}</td>
+          <td>{{ cliente.email }}</td>
+          <td>{{ cliente.telefono }}</td>
+          <td class="actions">
+            <a href="{{ url_for('cliente.historial', id=cliente.id) }}" class="history">Historial</a>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5" style="font-style: italic; color: #1a237e;">No se encontraron clientes.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock %}
