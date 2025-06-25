@@ -6,101 +6,144 @@
 
 <style>
   .product-card {
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(13, 110, 253, 0.15);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background: #fff;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 20px rgba(13, 110, 253, 0.15) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    background: #fff !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    overflow: hidden !important;
   }
 
   .product-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 15px 35px rgba(13, 110, 253, 0.3);
+    transform: translateY(-6px) !important;
+    box-shadow: 0 15px 35px rgba(13, 110, 253, 0.3) !important;
+  }
+
+  .product-image-wrapper {
+    position: relative !important;
+    width: 100% !important;
+    aspect-ratio: 4 / 3 !important;
+    overflow: hidden !important;
+    border-top-left-radius: 12px !important;
+    border-top-right-radius: 12px !important;
+    background-color: #f8f9fa !important;
   }
 
   .product-image {
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    height: 180px;
-    object-fit: cover;
-    width: 100%;
-    box-shadow: inset 0 -3px 10px rgba(0,0,0,0.1);
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    transition: transform 0.3s ease !important;
+  }
+
+  .product-card:hover .product-image {
+    transform: scale(1.05) !important;
   }
 
   .no-image-placeholder {
-    height: 180px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #e3e8f5;
-    color: #6c757d;
-    font-weight: 600;
-    font-size: 1.1rem;
-    border-radius: 12px 12px 0 0;
+    width: 100% !important;
+    aspect-ratio: 4 / 3 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #e3e8f5 !important;
+    color: #6c757d !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem !important;
+    border-top-left-radius: 12px !important;
+    border-top-right-radius: 12px !important;
   }
 
   .card-body {
-    padding: 1.25rem;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    padding: 1.25rem !important;
+    flex-grow: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
   }
 
   .card-title {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #0d6efd;
-    margin-bottom: 0.5rem;
-    min-height: 3em;
+    font-size: 1.3rem !important;
+    font-weight: 700 !important;
+    color: #0d6efd !important;
+    margin-bottom: 0.5rem !important;
+    min-height: 3em !important;
   }
 
   .price {
-    font-size: 1.2rem;
-    color: #198754;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
+    font-size: 1.2rem !important;
+    color: #198754 !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.5rem !important;
   }
 
   .stock {
-    font-size: 0.9rem;
-    color: #6c757d;
-    margin-bottom: 1rem;
+    font-size: 0.9rem !important;
+    background-color: #fff3cd !important;
+    color: #856404 !important;
+    padding: 0.5rem 1rem !important;
+    border: 1px solid #ffeeba !important;
+    border-radius: 0.5rem !important;
+    margin-bottom: 1rem !important;
+    font-weight: 600 !important;
+    box-shadow: inset 0 0 4px rgba(255, 193, 7, 0.2) !important;
   }
 
   .btn-add {
-    background: #0d6efd;
-    color: #fff;
-    font-weight: 600;
-    border-radius: 30px;
-    padding: 0.45rem 1.5rem;
-    transition: background-color 0.3s ease;
-    box-shadow: 0 6px 20px rgba(13, 110, 253, 0.3);
+    background: #0d6efd !important;
+    color: #fff !important;
+    font-weight: 600 !important;
+    border-radius: 30px !important;
+    padding: 0.45rem 1.5rem !important;
+    transition: background-color 0.3s ease !important;
+    box-shadow: 0 6px 20px rgba(13, 110, 253, 0.3) !important;
   }
 
   .btn-add:hover {
-    background-color: #0846b7;
-    box-shadow: 0 8px 28px rgba(8, 70, 183, 0.5);
+    background-color: #0846b7 !important;
+    box-shadow: 0 8px 28px rgba(8, 70, 183, 0.5) !important;
   }
 
   .btn-add i {
-    margin-right: 6px;
-    font-size: 1.1rem;
-    vertical-align: middle;
+    margin-right: 6px !important;
+    font-size: 1.1rem !important;
+    vertical-align: middle !important;
   }
 
+  /* Responsive */
   @media (max-width: 575.98px) {
     form.d-flex {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 1rem;
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: 1rem !important;
     }
+
     form.d-flex select,
     form.d-flex button {
       width: 100% !important;
       max-width: 100% !important;
+    }
+
+    .card-title {
+      font-size: 1.1rem !important;
+    }
+
+    .price {
+      font-size: 1rem !important;
+    }
+
+    .stock {
+      font-size: 0.85rem !important;
+    }
+
+    .btn-add {
+      font-size: 0.95rem !important;
+      padding: 0.5rem 1.2rem !important;
     }
   }
 </style>
@@ -117,13 +160,15 @@
   <button type="submit" class="btn btn-primary px-4">Filtrar</button>
 </form>
 
-<!-- Grilla responsive mejorada -->
+<!-- Grilla responsive -->
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
   {% for producto in productos %}
   <div class="col">
     <div class="product-card h-100">
       {% if producto.imagen %}
-        <img class="product-image" src="{{ url_for('static', filename='img/productos/' ~ producto.imagen) }}" alt="{{ producto.nombre }}" />
+        <div class="product-image-wrapper">
+          <img class="product-image" src="{{ url_for('static', filename='img/productos/' ~ producto.imagen) }}" alt="{{ producto.nombre }}" />
+        </div>
       {% else %}
         <div class="no-image-placeholder">
           Sin imagen

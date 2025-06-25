@@ -149,6 +149,29 @@
           z-index: 1100;
         }
       }
+.nav-link.position-relative {
+  position: relative; /* para posicionar el badge */
+}
+
+.badge-counter {
+  position: absolute;
+  top: 2px;         /* Más arriba */
+  right: 4px;       /* Más a la derecha, pegado al icono */
+  background: red;
+  color: white;
+  font-size: 1rem;  /* Más grande */
+  font-weight: 700;
+  padding: 4px 8px; /* Más grande para que el círculo sea mayor */
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+  user-select: none;
+  line-height: 1;
+  pointer-events: none;
+  min-width: 22px;  /* Para que sea más redondo */
+  text-align: center;
+}
+
+
     </style>
 
     {% block styles %}
@@ -192,10 +215,14 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ url_for('carrito_empleado.mostrar_carrito') }}" 
-             class="nav-link {% if request.path.startswith('/empleados/carrito') %}active{% endif %}">
-            <i class="bi bi-cart-fill"></i> Carrito
-          </a>
+         <a href="{{ url_for('carrito_empleado.mostrar_carrito') }}" 
+   class="nav-link position-relative {% if request.path.startswith('/empleados/carrito') %}active{% endif %}">
+  <i class="bi bi-cart-fill"></i> Carrito
+  {% if carrito_count and carrito_count > 0 %}
+    <span class="badge-counter">{{ carrito_count }}</span>
+  {% endif %}
+</a>
+
         </li>
         <br><br><br><br><br><br><br><br><br><br>
         <li class="nav-item mt-auto mb-3">

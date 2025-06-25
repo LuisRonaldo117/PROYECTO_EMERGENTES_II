@@ -47,6 +47,14 @@ def inject_active_path():
         return 'active' if request.path == path else ''
     return dict(is_active=is_active)
 
+from flask import session
+
+@app.context_processor
+def inject_carrito_count():
+    carrito = session.get('carrito', {})
+    total = sum(item['cantidad'] for item in carrito.values()) if carrito else 0
+    return dict(carrito_count=total)
+
 @app.route('/')
 def home():
     if current_user.is_authenticated:
