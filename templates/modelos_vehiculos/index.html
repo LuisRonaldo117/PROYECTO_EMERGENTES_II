@@ -42,10 +42,16 @@
     background-color: #283593;
   }
 
+  .table-responsive-wrapper {
+    overflow-x: auto;
+    width: 100%;
+  }
+
   table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.9rem;
+    min-width: 600px; /* importante para scroll en móvil */
   }
 
   thead {
@@ -81,8 +87,8 @@
     vertical-align: middle;
     border: 1px solid #c5cae9;
     color: #1a237e;
-    font-size: 1.1rem;       /* Más grande */
-    font-weight: 700;        /* Más grueso */
+    font-size: 1.1rem;
+    font-weight: 700;
   }
 
   .actions {
@@ -124,7 +130,7 @@
     background-color: #ab2a26;
   }
 
-  /* ====== Adaptación para móviles ====== */
+  /* === Móviles === */
   @media (max-width: 767.98px) {
     .container {
       padding: 15px 10px;
@@ -148,12 +154,7 @@
     }
 
     table {
-      display: block;
-      width: 100%;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      min-width: 500px; /* Para que se pueda hacer scroll */
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
 
     thead th, tbody td {
@@ -161,13 +162,9 @@
       font-size: 1rem;
     }
 
-    tbody td {
-      font-weight: 600;
-    }
-
     .actions {
       gap: 10px;
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
     }
 
     .actions a {
@@ -184,34 +181,36 @@
   <h1>Modelos de Vehículos</h1>
   <a href="{{ url_for('modelo_vehiculo.create') }}" class="button">+ Nuevo Modelo</a>
 
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Marca</th>
-        <th>Modelo</th>
-        <th>Año</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for m in modelos %}
-      <tr>
-        <td>{{ m.id }}</td>
-        <td>{{ m.marca }}</td>
-        <td>{{ m.modelo }}</td>
-        <td>{{ m.anio }}</td>
-        <td class="actions">
-          <a href="{{ url_for('modelo_vehiculo.edit', id=m.id) }}" class="edit">Editar</a>
-          <a href="{{ url_for('modelo_vehiculo.delete', id=m.id) }}" class="delete" onclick="return confirm('¿Estás seguro de eliminar este modelo?');">Eliminar</a>
-        </td>
-      </tr>
-      {% else %}
-      <tr>
-        <td colspan="5" style="color:#1a237e; font-style: italic;">No hay modelos registrados.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="table-responsive-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Marca</th>
+          <th>Modelo</th>
+          <th>Año</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in modelos %}
+        <tr>
+          <td>{{ m.id }}</td>
+          <td>{{ m.marca }}</td>
+          <td>{{ m.modelo }}</td>
+          <td>{{ m.anio }}</td>
+          <td class="actions">
+            <a href="{{ url_for('modelo_vehiculo.edit', id=m.id) }}" class="edit">Editar</a>
+            <a href="{{ url_for('modelo_vehiculo.delete', id=m.id) }}" class="delete" onclick="return confirm('¿Estás seguro de eliminar este modelo?');">Eliminar</a>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5" style="color:#1a237e; font-style: italic;">No hay modelos registrados.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock %}

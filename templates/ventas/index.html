@@ -26,10 +26,16 @@
     box-shadow: 0 0 15px rgba(26, 35, 126, 0.25);
   }
 
+  .table-responsive-wrapper {
+    overflow-x: auto;
+    width: 100%;
+  }
+
   table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.90rem;
+    min-width: 750px; /* para permitir scroll en móvil */
   }
 
   thead {
@@ -111,11 +117,6 @@
     }
 
     table {
-      display: block;
-      width: 100%;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      min-width: 700px; /* para que la tabla no se comprima demasiado */
       font-size: 0.85rem;
     }
 
@@ -145,45 +146,47 @@
 <div class="container">
   <h1>Lista de Ventas</h1>
 
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Cliente</th>
-        <th>Responsable</th>
-        <th>Fecha</th>
-        <th>Método de Pago</th>
-        <th>Vehículo</th>
-        <th>Total (Bs.)</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for venta in ventas %}
-      <tr>
-        <td>{{ venta.id }}</td>
-        <td>{{ venta.cliente.nombre }}</td>
-        <td>{{ venta.empleado.nombre }}</td>
-        <td>{{ venta.fecha.strftime('%d/%m/%Y') }}</td>
-        <td>{{ venta.metodo_pago }}</td>
-        <td>
-          {% if venta.modelo_vehiculo %}
-            {{ venta.modelo_vehiculo.marca }} {{ venta.modelo_vehiculo.modelo }} ({{ venta.modelo_vehiculo.anio }})
-          {% else %}
-            N/A
-          {% endif %}
-        </td>
-        <td>{{ '%.2f'|format(venta.total) }}</td>
-        <td class="actions">
-          <a href="{{ url_for('venta.detalle', venta_id=venta.id) }}" class="view">Ver detalles</a>
-        </td>
-      </tr>
-      {% else %}
-      <tr>
-        <td colspan="8" style="font-style: italic; color: #1a237e;">No hay ventas registradas.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="table-responsive-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Cliente</th>
+          <th>Responsable</th>
+          <th>Fecha</th>
+          <th>Método de Pago</th>
+          <th>Vehículo</th>
+          <th>Total (Bs.)</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for venta in ventas %}
+        <tr>
+          <td>{{ venta.id }}</td>
+          <td>{{ venta.cliente.nombre }}</td>
+          <td>{{ venta.empleado.nombre }}</td>
+          <td>{{ venta.fecha.strftime('%d/%m/%Y') }}</td>
+          <td>{{ venta.metodo_pago }}</td>
+          <td>
+            {% if venta.modelo_vehiculo %}
+              {{ venta.modelo_vehiculo.marca }} {{ venta.modelo_vehiculo.modelo }} ({{ venta.modelo_vehiculo.anio }})
+            {% else %}
+              N/A
+            {% endif %}
+          </td>
+          <td>{{ '%.2f'|format(venta.total) }}</td>
+          <td class="actions">
+            <a href="{{ url_for('venta.detalle', venta_id=venta.id) }}" class="view">Ver detalles</a>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="8" style="font-style: italic; color: #1a237e;">No hay ventas registradas.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock %}
