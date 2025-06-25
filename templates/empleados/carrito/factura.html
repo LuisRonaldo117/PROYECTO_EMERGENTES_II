@@ -1,0 +1,170 @@
+{% extends 'empleados/base.html' %}
+{% block title %}Factura{% endblock %}
+
+{% block content %}
+<div id="factura" class="factura-container">
+  <div class="factura-header">
+    <h2>Factura N° {{ "%05d"|format(venta.id) }}</h2>
+    <p><strong>Fecha:</strong> {{ venta.fecha.strftime('%d/%m/%Y %H:%M') }}</p>
+  </div>
+
+  <div class="factura-info">
+    <p><strong>Cliente:</strong> {{ venta.cliente.nombre }}</p>
+    <p><strong>Teléfono:</strong> {{ venta.cliente.telefono }}</p>
+    <p><strong>Método de pago:</strong> {{ venta.metodo_pago }}</p>
+    {% if venta.modelo_vehiculo %}
+      <p><strong>Vehículo:</strong> {{ venta.modelo_vehiculo.marca }} {{ venta.modelo_vehiculo.modelo }} ({{ venta.modelo_vehiculo.anio }})</p>
+    {% endif %}
+    <p><strong>Empleado:</strong> {{ venta.empleado.nombre }}</p>
+  </div>
+
+  <table class="factura-tabla">
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio Unitario</th>
+        <th>Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for detalle in venta.detalles %}
+      <tr>
+        <td>{{ detalle.producto.nombre }}</td>
+        <td>{{ detalle.cantidad }}</td>
+        <td>Bs./ {{ "%.2f"|format(detalle.precio_unitario) }}</td>
+        <td>Bs./ {{ "%.2f"|format(detalle.subtotal) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="factura-total">
+    <strong>Total: Bs./ {{ "%.2f"|format(venta.total) }}</strong>
+  </div>
+
+  <div class="factura-acciones no-print">
+    <button onclick="window.print()" class="btn btn-primary">🖨️ Imprimir Factura</button>
+    <a href="{{ url_for('empleado.productos') }}" class="btn btn-danger">Volver a Productos</a>
+  </div>
+</div>
+
+<style>
+/* Diseño general */
+#factura {
+  max-width: 800px !important;
+  margin: auto !important;
+  padding: 40px !important;
+  background: #ffffff !important;
+  border: 1px solid #dce3f0 !important;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) !important;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+/* Encabezado de la factura */
+.factura-header {
+  text-align: center !important;
+  background-color: #007bff !important;
+  color: white !important;
+  padding: 20px !important;
+  border-radius: 8px !important;
+  margin-bottom: 30px !important;
+}
+
+.factura-header h2 {
+  margin: 0 !important;
+  font-size: 28px !important;
+  font-weight: bold !important;
+}
+
+/* Información del cliente */
+.factura-info p {
+  margin: 4px 0 !important;
+  font-size: 16px !important;
+}
+
+/* Tabla de productos */
+.factura-tabla {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin-top: 20px !important;
+  margin-bottom: 30px !important;
+}
+
+.factura-tabla th {
+  background-color: #007bff !important;
+  color: white !important;
+  padding: 12px !important;
+  text-align: center !important;
+  font-size: 16px !important;
+}
+
+.factura-tabla td {
+  padding: 10px !important;
+  border: 1px solid #ddd !important;
+  text-align: center !important;
+  font-size: 15px !important;
+}
+
+/* Total */
+.factura-total {
+  text-align: right !important;
+  font-size: 20px !important;
+  font-weight: bold !important;
+  color: #333 !important;
+}
+
+/* Botones */
+.factura-acciones {
+  text-align: center !important;
+  margin-top: 30px !important;
+}
+
+.factura-acciones .btn {
+  margin: 5px !important;
+}
+
+/* Estilos para imprimir */
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+  #factura, #factura * {
+    visibility: visible !important;
+  }
+  #factura {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
+/* Responsive tabla en móviles */
+@media (max-width: 768px) {
+  .factura-tabla {
+    display: block !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+  }
+
+  .factura-header h2 {
+    font-size: 22px !important;
+  }
+
+  .factura-info p, .factura-tabla th, .factura-tabla td {
+    font-size: 14px !important;
+  }
+
+  .factura-total {
+    font-size: 18px !important;
+  }
+}
+
+</style>
+{% endblock %}

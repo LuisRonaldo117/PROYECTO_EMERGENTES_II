@@ -9,9 +9,9 @@ from models.detalle_venta_model import DetalleVenta
 from models.cliente_model import Cliente
 from models.modelo_vehiculo_model import ModeloVehiculo
 
-
 carrito_empleado_bp = Blueprint('carrito_empleado', __name__, url_prefix='/empleados/carrito')
 
+# Agregar producto al carrito
 @carrito_empleado_bp.route('/agregar', methods=['POST'])
 def agregar():
     producto_id = request.form.get('producto_id')
@@ -36,16 +36,14 @@ def agregar():
             'nombre': producto.nombre,
             'precio': producto.precio,
             'cantidad': 1,
-            'imagen': producto.imagen  # **Importante**
+            'imagen': producto.imagen
         }
 
     session['carrito'] = carrito
-    print("Carrito guardado en sesión:", carrito)  # Para debug
     flash(f"{producto.nombre} añadido al carrito", "success")
     return redirect(url_for('empleado.productos'))
 
-
-
+# Mostrar el carrito
 @carrito_empleado_bp.route('/')
 def mostrar_carrito():
     carrito = session.get('carrito', {})
@@ -60,12 +58,14 @@ def mostrar_carrito():
         clientes=clientes
     )
 
+# Vaciar carrito
 @carrito_empleado_bp.route('/vaciar', methods=['POST'])
 def vaciar_carrito():
     session.pop('carrito', None)
     flash("El carrito ha sido vaciado", "info")
     return redirect(url_for('carrito_empleado.mostrar_carrito'))
 
+# Incrementar cantidad
 @carrito_empleado_bp.route('/incrementar/<producto_id>', methods=['POST'])
 def incrementar(producto_id):
     carrito = session.get('carrito', {})
@@ -74,6 +74,7 @@ def incrementar(producto_id):
     session['carrito'] = carrito
     return redirect(url_for('carrito_empleado.mostrar_carrito'))
 
+# Disminuir cantidad
 @carrito_empleado_bp.route('/disminuir/<producto_id>', methods=['POST'])
 def disminuir(producto_id):
     carrito = session.get('carrito', {})
@@ -85,7 +86,7 @@ def disminuir(producto_id):
     session['carrito'] = carrito
     return redirect(url_for('carrito_empleado.mostrar_carrito'))
 
-
+# Confirmar compra → crear venta + detalle + redirigir a factura
 @carrito_empleado_bp.route('/confirmar', methods=['POST'])
 def confirmar_compra():
     carrito = session.get('carrito', {})
@@ -95,7 +96,7 @@ def confirmar_compra():
 
     cliente_id = request.form.get('cliente_id')
     metodo_pago = request.form.get('metodo_pago')
-    modelo_vehiculo_id = request.form.get('modelo_vehiculo_id') or None  # puede ser None
+    modelo_vehiculo_id = request.form.get('modelo_vehiculo_id') or None
 
     if not cliente_id or not metodo_pago:
         flash("Debe seleccionar cliente y método de pago", "danger")
@@ -119,7 +120,7 @@ def confirmar_compra():
     )
 
     db.session.add(venta)
-    db.session.flush()
+    db.session.flush()  # Obtener venta.id antes del commit
 
     for producto_id, item in carrito.items():
         detalle = DetalleVenta(
@@ -139,5 +140,12 @@ def confirmar_compra():
 
     db.session.commit()
     session.pop('carrito', None)
+
     flash("Compra confirmada exitosamente", "success")
-    return redirect(url_for('empleado.productos'))
+    return redirect(url_for('carrito_empleado.factura', venta_id=venta.id))
+
+# Mostrar factura tras confirmar compra
+@carrito_empleado_bp.route('/factura/<int:venta_id>')
+def factura(venta_id):
+    venta = Venta.query.get_or_404(venta_id)
+    return render_template('empleados/carrito/factura.html', venta=venta)
