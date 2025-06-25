@@ -42,10 +42,17 @@
     background-color: #283593;
   }
 
+  .table-responsive-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.9rem;
+    min-width: 450px; /* asegura visibilidad en scroll horizontal */
   }
 
   thead {
@@ -148,11 +155,6 @@
     }
 
     table {
-      display: block;
-      width: 100%;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      min-width: 450px; /* permite scroll horizontal */
       font-size: 0.9rem;
     }
 
@@ -162,9 +164,9 @@
     }
 
     .actions {
-      flex-direction: column; /* apilar botones verticalmente */
-      gap: 8px;
+      flex-direction: column;
       align-items: center;
+      gap: 8px;
     }
 
     .actions a {
@@ -181,30 +183,32 @@
   <h1>Lista de Categorías</h1>
   <a href="{{ url_for('categoria.create') }}" class="button">+ Nueva Categoría</a>
 
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in categorias %}
-      <tr>
-        <td>{{ item.id }}</td>
-        <td>{{ item.nombre }}</td>
-        <td class="actions">
-          <a href="{{ url_for('categoria.edit', id=item.id) }}" class="edit">Editar</a>
-          <a href="{{ url_for('categoria.delete', id=item.id) }}" class="delete" onclick="return confirm('¿Estás seguro de eliminar esta categoría?');">Eliminar</a>
-        </td>
-      </tr>
-      {% else %}
-      <tr>
-        <td colspan="3" style="color:#1a237e; font-style: italic;">No hay categorías registradas.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="table-responsive-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in categorias %}
+        <tr>
+          <td>{{ item.id }}</td>
+          <td>{{ item.nombre }}</td>
+          <td class="actions">
+            <a href="{{ url_for('categoria.edit', id=item.id) }}" class="edit">Editar</a>
+            <a href="{{ url_for('categoria.delete', id=item.id) }}" class="delete" onclick="return confirm('¿Estás seguro de eliminar esta categoría?');">Eliminar</a>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="3" style="color:#1a237e; font-style: italic;">No hay categorías registradas.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock %}

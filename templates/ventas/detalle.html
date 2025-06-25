@@ -9,7 +9,6 @@
     margin-top: 1px;
     border-radius: 10px;
     font-family: 'Segoe UI', sans-serif;
-
     max-height: 100%;
     overflow-y: auto;
     box-sizing: border-box;
@@ -55,11 +54,17 @@
     font-size: 1rem;
 }
 
+.table-responsive-wrapper {
+    overflow-x: auto;
+    width: 100%;
+}
+
 .factura-table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
     table-layout: fixed;
+    min-width: 600px;
 }
 
 .factura-table thead th {
@@ -123,7 +128,6 @@ tr {
     letter-spacing: 2px;
 }
 
-/* Botones */
 .factura-buttons {
     margin-top: 30px;
     display: flex;
@@ -140,7 +144,6 @@ tr {
     cursor: pointer;
 }
 
-/* Scroll para tabla en móvil */
 @media (max-width: 767.98px) {
     .factura-container {
         padding: 15px 10px;
@@ -167,15 +170,11 @@ tr {
     }
 
     .factura-table {
-        display: block;
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        min-width: 600px;
         font-size: 0.9rem;
     }
 
-    .factura-table thead th, .factura-table tbody td {
+    .factura-table thead th,
+    .factura-table tbody td {
         padding: 8px 10px;
         font-size: 0.9rem;
         white-space: nowrap;
@@ -245,28 +244,30 @@ tr {
         <span class="separador-title">Detalle de Productos</span>
     </div>
 
-    <table class="table table-bordered factura-table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Precio Unitario (Bs.)</th>
-                <th>Subtotal (Bs.)</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for detalle in venta.detalles %}
-            <tr>
-                <td>{{ loop.index }}</td>
-                <td>{{ detalle.producto.nombre }}</td>
-                <td>{{ detalle.cantidad }}</td>
-                <td>{{ '%.2f'|format(detalle.precio_unitario) }}</td>
-                <td>{{ '%.2f'|format(detalle.subtotal) }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-responsive-wrapper">
+      <table class="table table-bordered factura-table">
+          <thead>
+              <tr>
+                  <th>#</th>
+                  <th>Producto</th>
+                  <th>Cantidad</th>
+                  <th>Precio Unitario (Bs.)</th>
+                  <th>Subtotal (Bs.)</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for detalle in venta.detalles %}
+              <tr>
+                  <td>{{ loop.index }}</td>
+                  <td>{{ detalle.producto.nombre }}</td>
+                  <td>{{ detalle.cantidad }}</td>
+                  <td>{{ '%.2f'|format(detalle.precio_unitario) }}</td>
+                  <td>{{ '%.2f'|format(detalle.subtotal) }}</td>
+              </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+    </div>
 
     <div class="factura-footer">
         <h5><strong>Total: Bs. {{ '%.2f'|format(venta.total) }}</strong></h5>
@@ -279,7 +280,6 @@ tr {
     </div>
 </div>
 
-<!-- Script para descargar como PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
     function descargarPDF() {
