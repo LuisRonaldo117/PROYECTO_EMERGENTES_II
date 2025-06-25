@@ -5,235 +5,248 @@
 {% block content %}
 
 <style>
- .carrito-container {
-  max-width: 1000px;
-  margin: 0rem auto;
-  background: #f9fafc;
-  padding: 0rem 3rem;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(13, 110, 253, 0.15);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #222;
-  transition: background-color 0.3s ease;
-}
-.carrito-container h2 {
-  text-align: center;
-  font-weight: 900; /* más grueso */
-  font-size: 2.4rem;
-  color: #0d6efd;
-  margin-bottom: 2rem;
-  text-shadow: 0 0 10px #a3c7ff;
-}
-table tbody td form button {
-  border-radius: 50%;
-  width: 34px;
-  height: 34px;
-  padding: 0;
-  border: 2.5px solid #0d6efd;
-  background: transparent;
-  color: #0d6efd;
-  font-weight: 700;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
-  margin: 0 3px;
-  box-shadow: 0 2px 6px rgba(13, 110, 253, 0.25);
-}
+  /* Global box-sizing para mejor control de anchos */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
 
-table tbody td form button:hover {
-  background-color: #0d6efd;
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(13, 110, 253, 0.5);
-}
-
-.total-container {
-  text-align: right;
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: #0d6efd;
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 3px solid #0d6efd;
-  text-shadow: 0 0 10px #a3c7ff;
-}
-
-.actions {
-  margin-top: 3rem;
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-}
-
-.actions a,
-.actions button {
-  font-size: 1.3rem;
-  padding: 0.85rem 2.5rem;
-  border-radius: 35px;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 8px 25px rgba(13, 110, 253, 0.35);
-  user-select: none;
-}
-
-.actions a.btn-primary {
-  background-color: #0d6efd;
-  color: #fff;
-  text-decoration: none;
-}
-
-.actions a.btn-primary:hover {
-  background-color: #083aaf;
-  box-shadow: 0 10px 30px rgba(8, 58, 175, 0.6);
-}
-
-.actions button.btn-success {
-  background-color: #198754;
-  color: #fff;
-  box-shadow: 0 8px 25px rgba(25, 135, 84, 0.5);
-}
-
-.actions button.btn-success:hover {
-  background-color: #11632f;
-  box-shadow: 0 10px 30px rgba(17, 99, 47, 0.75);
-}
-
-.actions form button.btn-danger {
-  background-color: #dc3545;
-  color: #fff;
-  box-shadow: 0 8px 25px rgba(220, 53, 69, 0.5);
-}
-
-.actions form button.btn-danger:hover {
-  background-color: #7f1f22;
-  box-shadow: 0 10px 30px rgba(127, 31, 34, 0.75);
-}
-
-/* Diseño para carrito vacío */
-.empty-cart {
-  text-align: center;
-  padding: 4rem 2rem;
-  color: #555;
-  font-size: 1.8rem;
-  font-weight: 600;
-  border: 3px dashed #0d6efd;
-  border-radius: 20px;
-  background: #e9f0ff;
-  box-shadow: 0 8px 24px rgba(13, 110, 253, 0.1);
-  user-select: none;
-}
-
-.empty-cart i {
-  font-size: 6rem;
-  color: #0d6efd;
-  margin-bottom: 1rem;
-  display: inline-block;
-  text-shadow: 0 0 15px #a3c7ff;
-}
-
-.empty-cart p {
-  margin-bottom: 2rem;
-  color: #083aaf;
-}
-
-.empty-cart a.btn {
-  font-size: 1.3rem;
-  padding: 1rem 3rem;
-  background-color: #0d6efd;
-  color: white;
-  border-radius: 35px;
-  box-shadow: 0 8px 30px rgba(13, 110, 253, 0.5);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  text-decoration: none;
-  display: inline-block;
-  user-select: none;
-}
-
-.empty-cart a.btn:hover {
-  background-color: #083aaf;
-  box-shadow: 0 10px 40px rgba(8, 58, 175, 0.7);
-}
-
-
-/* === Responsive para móviles === */
-@media (max-width: 767.98px) {
   .carrito-container {
-    padding: 1rem 1rem;
-    margin: 1rem;
-    box-shadow: none;
-    border-radius: 12px;
-    max-width: 100%;
+    max-width: 1000px;
+    margin: 0rem auto;
+    background: #f9fafc;
+    padding: 0rem 3rem;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(13, 110, 253, 0.15);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #222;
+    transition: background-color 0.3s ease;
   }
-
   .carrito-container h2 {
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-    text-shadow: none;
-  }
-
-  /* Ajuste de columnas del formulario */
-  .mb-4.row.gx-3.gy-3.justify-content-center > div {
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  /* Tabla con scroll horizontal */
-  table.table {
-    display: block;
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    min-width: 600px; /* Para evitar colapsos */
-  }
-
-  table.table thead th,
-  table.table tbody td {
-    white-space: nowrap;
-    font-size: 0.85rem;
-    padding: 8px 10px;
-  }
-
-  /* Botones para aumentar/disminuir más grandes para tocar con el dedo */
-  table tbody td form button {
-    width: 38px;
-    height: 38px;
-    font-size: 1.4rem;
-    margin: 0 4px;
-  }
-
-  /* Ajustar total */
-  .total-container {
-    font-size: 1.4rem;
     text-align: center;
-    margin-top: 1.5rem;
-    border-top: 2px solid #0d6efd;
-    padding-top: 1rem;
+    font-weight: 900; /* más grueso */
+    font-size: 2.4rem;
+    color: #0d6efd;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 10px #a3c7ff;
+  }
+  table tbody td form button {
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 2.5px solid #0d6efd;
+    background: transparent;
+    color: #0d6efd;
+    font-weight: 700;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    margin: 0 3px;
+    box-shadow: 0 2px 6px rgba(13, 110, 253, 0.25);
   }
 
-  /* Ajustar botones de acción */
+  table tbody td form button:hover {
+    background-color: #0d6efd;
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(13, 110, 253, 0.5);
+  }
+
+  /* Evitar que el texto largo salga de la celda */
+  table.table td, table.table th {
+    word-break: break-word;
+  }
+
+  .total-container {
+    text-align: right;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #0d6efd;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 3px solid #0d6efd;
+    text-shadow: 0 0 10px #a3c7ff;
+  }
+
   .actions {
-    flex-direction: column;
-    gap: 1rem;
+    margin-top: 3rem;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
   }
 
   .actions a,
   .actions button {
-    width: 100%;
-    font-size: 1.2rem;
-    padding: 1rem;
-    border-radius: 30px;
+    font-size: 1.3rem;
+    padding: 0.85rem 2.5rem;
+    border-radius: 35px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 25px rgba(13, 110, 253, 0.35);
+    user-select: none;
   }
 
-  /* Vaciar carrito centrado y ancho completo */
-  form[style*="text-align: center;"] button {
-    width: 100%;
-    padding: 1rem;
-    font-size: 1.2rem;
-    border-radius: 30px;
+  .actions a.btn-primary {
+    background-color: #0d6efd;
+    color: #fff;
+    text-decoration: none;
   }
-}
+
+  .actions a.btn-primary:hover {
+    background-color: #083aaf;
+    box-shadow: 0 10px 30px rgba(8, 58, 175, 0.6);
+  }
+
+  .actions button.btn-success {
+    background-color: #198754;
+    color: #fff;
+    box-shadow: 0 8px 25px rgba(25, 135, 84, 0.5);
+  }
+
+  .actions button.btn-success:hover {
+    background-color: #11632f;
+    box-shadow: 0 10px 30px rgba(17, 99, 47, 0.75);
+  }
+
+  .actions form button.btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+    box-shadow: 0 8px 25px rgba(220, 53, 69, 0.5);
+  }
+
+  .actions form button.btn-danger:hover {
+    background-color: #7f1f22;
+    box-shadow: 0 10px 30px rgba(127, 31, 34, 0.75);
+  }
+
+  /* Diseño para carrito vacío */
+  .empty-cart {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #555;
+    font-size: 1.8rem;
+    font-weight: 600;
+    border: 3px dashed #0d6efd;
+    border-radius: 20px;
+    background: #e9f0ff;
+    box-shadow: 0 8px 24px rgba(13, 110, 253, 0.1);
+    user-select: none;
+  }
+
+  .empty-cart i {
+    font-size: 6rem;
+    color: #0d6efd;
+    margin-bottom: 1rem;
+    display: inline-block;
+    text-shadow: 0 0 15px #a3c7ff;
+  }
+
+  .empty-cart p {
+    margin-bottom: 2rem;
+    color: #083aaf;
+  }
+
+  .empty-cart a.btn {
+    font-size: 1.3rem;
+    padding: 1rem 3rem;
+    background-color: #0d6efd;
+    color: white;
+    border-radius: 35px;
+    box-shadow: 0 8px 30px rgba(13, 110, 253, 0.5);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    user-select: none;
+  }
+
+  .empty-cart a.btn:hover {
+    background-color: #083aaf;
+    box-shadow: 0 10px 40px rgba(8, 58, 175, 0.7);
+  }
+
+
+  /* === Responsive para móviles === */
+  @media (max-width: 767.98px) {
+    .carrito-container {
+      padding: 1rem 1rem;
+      margin: 1rem 0.5rem;
+      box-shadow: none;
+      border-radius: 12px;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    .carrito-container h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      text-shadow: none;
+    }
+
+    /* Ajuste de columnas del formulario */
+    .mb-4.row.gx-3.gy-3.justify-content-center > div {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    /* Tabla con scroll horizontal */
+    table.table {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      min-width: 600px; /* Para evitar colapsos */
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    table.table thead th,
+    table.table tbody td {
+      white-space: nowrap;
+      font-size: 0.85rem;
+      padding: 8px 10px;
+    }
+
+    /* Botones para aumentar/disminuir más grandes para tocar con el dedo */
+    table tbody td form button {
+      width: 38px;
+      height: 38px;
+      font-size: 1.4rem;
+      margin: 0 4px;
+    }
+
+    /* Ajustar total */
+    .total-container {
+      font-size: 1.4rem;
+      text-align: center;
+      margin-top: 1.5rem;
+      border-top: 2px solid #0d6efd;
+      padding-top: 1rem;
+    }
+
+    /* Ajustar botones de acción */
+    .actions {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .actions a,
+    .actions button {
+      width: 100%;
+      font-size: 1.2rem;
+      padding: 1rem;
+      border-radius: 30px;
+    }
+
+    /* Vaciar carrito centrado y ancho completo */
+    form[style*="text-align: center;"] button {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.2rem;
+      border-radius: 30px;
+    }
+  }
 </style>
 
 <div class="carrito-container">
@@ -278,8 +291,6 @@ table tbody td form button:hover {
       </div>
     </div>
 
-
-
     <div class="actions">
       <a href="{{ url_for('empleado.productos') }}" class="btn btn-primary">Seguir comprando</a>
       <button type="submit" class="btn btn-success">Confirmar Compra</button>
@@ -288,53 +299,51 @@ table tbody td form button:hover {
 
   <!-- Tabla de productos con botones para aumentar y disminuir cantidad FUERA del formulario anterior -->
   <table class="table mt-4">
-  <thead>
-    <tr>
-      <th>Imagen</th>
-      <th>Producto</th>
-      <th>Precio</th>
-      <th>Cantidad</th>
-      <th>Subtotal</th>
-      <th>Modificar Cantidad</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for producto_id, item in carrito.items() %}
-    <tr>
-<td>
-  {% if item.imagen %}
-    <img src="{{ url_for('static', filename='img/productos/' ~ item.imagen) }}" alt="{{ item.nombre }}" style="width: 60px; height: auto; border-radius: 6px;" />
-  {% else %}
-    <span>No imagen</span>
-  {% endif %}
-</td>
+    <thead>
+      <tr>
+        <th>Imagen</th>
+        <th>Producto</th>
+        <th>Precio</th>
+        <th>Cantidad</th>
+        <th>Subtotal</th>
+        <th>Modificar Cantidad</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for producto_id, item in carrito.items() %}
+      <tr>
+        <td>
+          {% if item.imagen %}
+            <img src="{{ url_for('static', filename='img/productos/' ~ item.imagen) }}" alt="{{ item.nombre }}" style="width: 60px; height: auto; border-radius: 6px;" />
+          {% else %}
+            <span>No imagen</span>
+          {% endif %}
+        </td>
 
+        <td>{{ item.nombre }}</td>
+        <td>Bs./ {{ "%.2f"|format(item.precio) }}</td>
+        <td>{{ item.cantidad }}</td>
+        <td>Bs./ {{ "%.2f"|format(item.precio * item.cantidad) }}</td>
+        <td style="white-space: nowrap;">
+          <form method="POST" action="{{ url_for('carrito_empleado.disminuir', producto_id=producto_id) }}" style="display:inline;">
+            <button type="submit" class="btn btn-sm btn-outline-primary" title="Disminuir cantidad" formnovalidate>−</button>
+          </form>
+          <form method="POST" action="{{ url_for('carrito_empleado.incrementar', producto_id=producto_id) }}" style="display:inline;">
+            <button type="submit" class="btn btn-sm btn-outline-primary" title="Aumentar cantidad" formnovalidate>+</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
-      <td>{{ item.nombre }}</td>
-      <td>${{ "%.2f"|format(item.precio) }}</td>
-      <td>{{ item.cantidad }}</td>
-      <td>${{ "%.2f"|format(item.precio * item.cantidad) }}</td>
-      <td style="white-space: nowrap;">
-        <form method="POST" action="{{ url_for('carrito_empleado.disminuir', producto_id=producto_id) }}" style="display:inline;">
-          <button type="submit" class="btn btn-sm btn-outline-primary" title="Disminuir cantidad" formnovalidate>−</button>
-        </form>
-        <form method="POST" action="{{ url_for('carrito_empleado.incrementar', producto_id=producto_id) }}" style="display:inline;">
-          <button type="submit" class="btn btn-sm btn-outline-primary" title="Aumentar cantidad" formnovalidate>+</button>
-        </form>
-      </td>
-    </tr>
-    {% endfor %}
-
-  </tbody>
-</table>
-        <div class="total-container">
-      Total: ${{ "%.2f"|format(total) }}
-        <form method="POST" action="{{ url_for('carrito_empleado.vaciar_carrito') }}" style="margin-top: 1rem; text-align: center;">
-    <button type="submit" class="btn btn-danger">Vaciar Carrito</button>
-  </form>
-<br>
-    </div>
-  <!-- Vaciar carrito también fuera del formulario para evitar validación -->
+  <div class="total-container">
+    Total: Bs./ {{ "%.2f"|format(total) }}
+    <form method="POST" action="{{ url_for('carrito_empleado.vaciar_carrito') }}" style="margin-top: 1rem; text-align: center;">
+      <button type="submit" class="btn btn-danger">Vaciar Carrito</button>
+    </form>
+    <br>
+  </div>
 
   {% else %}
   <div class="empty-cart">
