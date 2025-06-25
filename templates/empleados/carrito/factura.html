@@ -43,18 +43,49 @@
     <strong>Total: Bs./ {{ "%.2f"|format(venta.total) }}</strong>
   </div>
 
-  <div class="factura-acciones no-print">
+  <div class="factura-acciones no-print" id="botones-factura">
     <button onclick="window.print()" class="btn btn-primary">🖨️ Imprimir Factura</button>
+    <button id="downloadPdfBtn" class="btn btn-success">⬇️ Descargar PDF</button>
     <a href="{{ url_for('empleado.productos') }}" class="btn btn-danger">Volver a Productos</a>
   </div>
 </div>
+
+<!-- Script html2pdf.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+  document.getElementById('downloadPdfBtn').addEventListener('click', () => {
+    const element = document.getElementById('factura');
+    const botones = document.getElementById('botones-factura');
+
+    // Ocultar botones antes de exportar PDF
+    botones.style.display = 'none';
+
+    // Reducir padding para que suba el contenido al máximo
+    element.style.paddingTop = '0px';
+
+    const opt = {
+      margin: 0.1,  // margen muy pequeño para subir contenido
+      filename: `Factura_{{ "%05d"|format(venta.id) }}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, logging: false, dpi: 192, letterRendering: true },
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save().then(() => {
+      // Restaurar padding y mostrar botones de nuevo después de guardar PDF
+      element.style.paddingTop = '';
+      botones.style.display = 'flex';
+    });
+  });
+</script>
 
 <style>
 /* Diseño general */
 #factura {
   max-width: 800px !important;
   margin: auto !important;
-  padding: 40px !important;
+  padding: 40px !important;  /* padding normal para pantalla */
   background: #ffffff !important;
   border: 1px solid #dce3f0 !important;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) !important;
@@ -118,6 +149,9 @@
 .factura-acciones {
   text-align: center !important;
   margin-top: 30px !important;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
 
 .factura-acciones .btn {
@@ -145,6 +179,7 @@
     display: none !important;
   }
 }
+
 /* Responsive tabla en móviles */
 @media (max-width: 768px) {
   .factura-tabla {
@@ -165,6 +200,5 @@
     font-size: 18px !important;
   }
 }
-
 </style>
 {% endblock %}
