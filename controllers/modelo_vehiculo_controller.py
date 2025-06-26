@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.modelo_vehiculo_model import ModeloVehiculo
-
+from flask_login import login_required
 modelo_vehiculo_bp = Blueprint('modelo_vehiculo', __name__, url_prefix='/modelos_vehiculos')
 
 @modelo_vehiculo_bp.route('/')
+@login_required
 def index():
     modelos = ModeloVehiculo.get_all()
     return render_template('modelos_vehiculos/index.html', modelos=modelos)

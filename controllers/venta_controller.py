@@ -6,10 +6,11 @@ from models.modelo_vehiculo_model import ModeloVehiculo
 from models.detalle_venta_model import DetalleVenta
 from models.producto_model import Producto
 from database import db
-
+from flask_login import login_required
 venta_bp = Blueprint('venta', __name__, url_prefix='/ventas')
 
 @venta_bp.route('/')
+@login_required
 def index():
     ventas = Venta.get_all()
     return render_template('ventas/index.html', ventas=ventas)

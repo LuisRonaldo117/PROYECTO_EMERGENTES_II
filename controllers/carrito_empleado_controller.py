@@ -1,5 +1,6 @@
 from flask import Blueprint, request, redirect, url_for, session, flash, render_template
 from flask_login import current_user
+from flask_login import login_required
 from datetime import datetime
 
 from database import db
@@ -45,6 +46,7 @@ def agregar():
 
 # Mostrar el carrito
 @carrito_empleado_bp.route('/')
+@login_required
 def mostrar_carrito():
     carrito = session.get('carrito', {})
     total = sum(item['precio'] * item['cantidad'] for item in carrito.values())

@@ -2,7 +2,7 @@ import os
 from flask import request, redirect, url_for, Blueprint
 from werkzeug.utils import secure_filename
 from database import db
-
+from flask_login import login_required
 from models.producto_model import Producto, ProductoProveedor
 from models.categoria_model import Categoria
 from models.proveedor_model import Proveedor
@@ -13,6 +13,7 @@ producto_bp = Blueprint('producto', __name__, url_prefix='/productos')
 UPLOAD_FOLDER = "static/img/productos"
 
 @producto_bp.route("/")
+@login_required
 def index():
     categoria_id = request.args.get('categoria_id', type=int)
     q = request.args.get('q', '').strip()

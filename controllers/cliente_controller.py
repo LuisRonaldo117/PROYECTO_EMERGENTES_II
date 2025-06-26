@@ -1,9 +1,10 @@
 from flask import request, redirect, url_for, Blueprint, abort, render_template
 from models.cliente_model import Cliente
-
+from flask_login import login_required
 cliente_bp = Blueprint('cliente', __name__, url_prefix='/clientes')
 
 @cliente_bp.route('/')
+@login_required
 def index():
     clientes = Cliente.get_all()  # Devuelve lista de clientes
     return render_template('clientes/index.html', clientes=clientes)

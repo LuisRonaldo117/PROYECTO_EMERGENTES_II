@@ -9,6 +9,7 @@ from flask_login import login_required  # para proteger la ruta
 empleado_bp = Blueprint('empleado', __name__, url_prefix='/empleados')
 
 @empleado_bp.route("/")
+@login_required
 def index():
     empleados = Empleado.get_all()
     return empleado_view.list(empleados)

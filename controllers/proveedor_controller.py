@@ -1,10 +1,12 @@
 from flask import request, redirect, url_for, Blueprint
 from models.proveedor_model import Proveedor
+from flask_login import login_required
 from views import proveedor_view
 
 proveedor_bp = Blueprint('proveedor', __name__, url_prefix='/proveedores')
 
 @proveedor_bp.route("/")
+@login_required
 def index():
     proveedores = Proveedor.get_all()
     return proveedor_view.list(proveedores)

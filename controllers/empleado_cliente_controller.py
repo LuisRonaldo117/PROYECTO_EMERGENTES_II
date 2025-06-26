@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from models.cliente_model import Cliente
 from views import empleado_cliente_view  # vistas específicas para empleados
-
+from flask_login import login_required  # para proteger la ruta
 empleado_cliente_bp = Blueprint('empleado_cliente', __name__, url_prefix='/empleados/clientes')
 
 @empleado_cliente_bp.route('/')
+@login_required
 def index():
     # Obtener el texto buscado del query param 'q'
     busqueda = request.args.get('q', '').strip()

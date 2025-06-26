@@ -1,10 +1,12 @@
 from flask import request, redirect, url_for, Blueprint
 from models.categoria_model import Categoria
 from views import categoria_view
+from flask_login import login_required
 
 categoria_bp = Blueprint('categoria', __name__, url_prefix='/categorias')
 
 @categoria_bp.route("/")
+@login_required
 def index():
     categorias = Categoria.get_all()
     return categoria_view.list(categorias)
